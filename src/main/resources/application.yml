@@ -1,0 +1,36 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /
+    session:
+      timeout: 60m
+      persistent: false
+    encoding:
+      charset: UTF-8
+      force: true
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  main:
+    allow-circular-references: true
+
+  jackson:
+    serialization:
+      indent-output: true
+
+  freemarker:
+    allow-request-override: false
+    cache: false
+    check-template-location: true
+    charset: UTF-8
+    content-type: text/html; charset=utf-8
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: false
+    suffix: .html
+    template-loader-path: classpath:/templates
+    request-context-attribute: request
+    settings:
+      "[template_exception_handler]": rethrow

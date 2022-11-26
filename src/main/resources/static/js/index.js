@@ -326,14 +326,26 @@ $(function () {
         };
 
         if (fieldset.sourceSet === fieldsetId) {
-            let sourceDb = DbtUtil.getSourceDb();
-            let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
+            let db = DbtUtil.getSourceDb();
+            let formData = DbtUtil.convertDbSettingToFormData(db);
 
-            DbtUtil.connectionTest(sourceFormData, {silent: true})
+            DbtUtil.connectionTest(formData, {silent: true})
             .then(res=>{
                 wizardNext();
             });
+        } else if (fieldset.destinationSet === fieldsetId) {
+            let db = DbtUtil.getDestinationDb();
+            let formData = DbtUtil.convertDbSettingToFormData(db);
+
+            DbtUtil.connectionTest(formData, {silent: true})
+                .then(res=>{
+                    wizardNext();
+                });
+
         } else if (fieldset.optionSet === fieldsetId) {
+            wizardNext();
+
+            gloader.show();
             let sourceDb = DbtUtil.getSourceDb();
             let destinationDb = DbtUtil.getDestinationDb();
             let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
@@ -389,34 +401,26 @@ $(function () {
                     });
             };
 
-            DbtUtil.connectionTest(destinationFormDb, {silent: true})
-            .then(res=>{
-                wizardNext();
+            $tablesSet.chkTables.prop('disabled', false).prop('checked', false);
+            $tablesSet.submit.prop('disabled', false);
+            $tablesSet.tablesSelectedText.empty();
+            $tablesSet.status.empty();
 
-                $tablesSet.chkTables.prop('disabled', false).prop('checked', false);
-                $tablesSet.submit.prop('disabled', false);
-                $tablesSet.tablesSelectedText.empty();
-                $tablesSet.status.empty();
+            $thead.find('th.source').text(sourceDb.type);
+            $thead.find('th.destination').text(destinationDb.type);
 
-                gloader.show();
-                let rowNo = 0;
-
-                $thead.find('th.source').text(sourceDb.type);
-                $thead.find('th.destination').text(destinationDb.type);
-
-                try {
-                    render();
-                    gloader.hide();
-                } catch(error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error occurred.',
-                        text: error.message,
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                }
-            });
+            try {
+                render();
+                gloader.hide();
+            } catch(error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error occurred.',
+                    text: error.message,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
         } else {
             wizardNext();
         }

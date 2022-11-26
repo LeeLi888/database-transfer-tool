@@ -96,7 +96,7 @@
             <div class="col">
                 <div class="w-100 text-center title">
                     <h2><strong>Database Transfer Tool</strong></h2>
-                    <p>Transfer data from one db to another.</p>
+                    <p class="opacity-50">I'm depends on the jdbc driver.</p>
                 </div>
 
                 <form name="f" class="mt-5" method="post">
@@ -122,7 +122,7 @@
                                     <input type="hidden" name="source-db-driver-class-name">
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" class="form-control" name="source-db-url" placeholder="Connection URL">
+                                    <input type="text" class="form-control" name="source-db-url" placeholder="Connection URL for JDBC Driver">
                                 </div>
                                 <div class="mb-4">
                                     <input type="text" class="form-control w-25" name="source-db-username" placeholder="User Name">
@@ -170,7 +170,7 @@
                                     <input type="hidden" name="destination-db-driver-class-name">
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" class="form-control" name="destination-db-url" placeholder="Connection URL">
+                                    <input type="text" class="form-control" name="destination-db-url" placeholder="Connection URL for JDBC Driver">
                                 </div>
                                 <div class="mb-4">
                                     <input type="text" class="form-control w-25" name="destination-db-username" placeholder="User Name">
@@ -195,7 +195,7 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button type="button" class="btn btn-light btn-wizard-next" data-next-set="#tables-set">
+                                        <button type="button" class="btn btn-light btn-wizard-next" data-next-set="#option-set">
                                             Next
                                             <i class="fa-solid fa-chevron-right"></i>
                                         </button>
@@ -206,12 +206,44 @@
                         </fieldset>
 
                         <!-- source database set -->
+                        <fieldset class="card-set animate__animated animate__fadeIn" id="option-set">
+                            <div class="card-body">
+                                <h5 class="card-title text-left">
+                                    Transfer Options
+                                    <label class="float-end">3/4</label>
+                                </h5>
+
+                                <div class="mt-4">
+                                    <h4>No options available now.</h4>
+                                </div>
+                            </div>
+
+                            <div class="form-card-footer text-end p-3">
+
+                                <ul class="actions-footer">
+                                    <li>
+                                        <button type="button" class="btn btn-light btn-wizard-previous" data-previous-set="#destination-set">
+                                            <i class="fa-solid fa-chevron-left"></i>
+                                            Previous
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="btn btn-light btn-wizard-next" data-next-set="#tables-set">
+                                            Next
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </fieldset>
+
+                        <!-- source database set -->
                         <fieldset class="card-set animate__animated animate__fadeIn" id="tables-set">
                             <div class="card-body">
                                 <h5 class="card-title text-left">
                                     Tables list
                                     <span class="transfer-summary"></span>
-                                    <label class="float-end">3/4</label>
+                                    <label class="float-end">4/4</label>
                                 </h5>
 
                                 <div class="mt-4 table-container">
@@ -240,7 +272,7 @@
 
                                 <ul class="actions-footer">
                                     <li>
-                                        <button type="button" class="btn btn-light btn-wizard-previous" data-previous-set="#destination-set">
+                                        <button type="button" class="btn btn-light btn-wizard-previous" data-previous-set="#option-set">
                                             <i class="fa-solid fa-chevron-left"></i>
                                             Previous
                                         </button>

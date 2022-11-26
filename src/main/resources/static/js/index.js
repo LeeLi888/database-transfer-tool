@@ -200,6 +200,7 @@ $(function () {
             for (let i = 0; i < $pendings.length; i++) {
                 let $tr = $pendings.eq(i);
 
+                $('.table-container')[0].scrollTop = $tr[0].offsetTop - $('.table-container')[0].offsetHeight + 100;
                 setTransferStatusClass2Tr($tr, 'running');
 
                 let sourceDb = getSourceDb();
@@ -255,6 +256,7 @@ $(function () {
 
     $('.btn.btn-wizard-next').click(function() {
         let fieldsetId = $(this).closest('fieldset').attr('id');
+
         let wizardNext = ()=>{
             $(this).closest('fieldset').removeClass('active');
             $($(this).data('next-set')).addClass('active');
@@ -267,7 +269,7 @@ $(function () {
             .then(res=>{
                 wizardNext();
             });
-        } else if ('destination-set' === fieldsetId) {
+        } else if ('option-set' === fieldsetId) {
             let sourceDb = getSourceDb();
             let destinationDb = getDestinationDb();
             let formData = convertDbSettingToFormData(destinationDb);
@@ -341,7 +343,6 @@ $(function () {
                 }).catch(error => {
                 });
             });
-
         } else {
             wizardNext();
         }

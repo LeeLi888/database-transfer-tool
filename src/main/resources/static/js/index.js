@@ -1,233 +1,296 @@
 $(function () {
 
-    //source
-    let $sourceDbType = $('[name="source-db-type"]');
-    let $sourceDbDriverClassName = $('[name="source-db-driver-class-name"]');
-    let $sourceDbUrl = $('[name="source-db-url"]');
-    let $sourceDbUsername = $('[name="source-db-username"]');
-    let $sourceDbPassword = $('[name="source-db-password"]');
-    let $btnSourceConnectionTest = $('#btn-source-connection-test');
+    const fieldset = {
+        sourceSet : 'source-set',
+        destinationSet : 'destination-set',
+        optionSet : 'option-set',
+        tablesSet : 'tables-set',
+    };
 
-    let $destinationDbType = $('[name="destination-db-type"]');
-    let $destinationDbDriverClassName = $('[name="destination-db-driver-class-name"]');
-    let $destinationDbUrl = $('[name="destination-db-url"]');
-    let $destinationDbUsername = $('[name="destination-db-username"]');
-    let $destinationDbPassword = $('[name="destination-db-password"]');
-    let $btnDestinationConnectionTest = $('#btn-destination-connection-test');
+    const $fieldset = {
+        sourceSet : $('#' + fieldset.sourceSet),
+        destinationSet : $('#' + fieldset.destinationSet),
+        optionSet : $('#' + fieldset.optionSet),
+        tablesSet : $('#' + fieldset.tablesSet),
+    };
 
-    let $statusTablesSet = $('#status-tables-set');
+    /**
+     * DOM
+     */
+    //source database dom
+    const $sourceSet = {
+        dbType              : $('[name="source-db-type"]'),
+        dbDriverClassName   : $('[name="source-db-driver-class-name"]'),
+        dbUrl               : $('[name="source-db-url"]'),
+        dbUsername          : $('[name="source-db-username"]'),
+        dbPassword          : $('[name="source-db-password"]'),
+        btnConnectionTest   : $('#btn-source-connection-test'),
+    };
 
-    //destination
-    let $destinationSet = $('#destination-set');
-
-    let getSourceDb = ()=> {
-        let db = new DatabaseSetting();
-        db.type = $sourceDbType.val();
-        db.driverClassName = $sourceDbDriverClassName.val();
-        db.url = $sourceDbUrl.val();
-        db.username = $sourceDbUsername.val();
-        db.password = $sourceDbPassword.val();
-
-        return db;
+    //destination database dom
+    const $destinationSet = {
+        dbType              : $('[name="destination-db-type"]'),
+        dbDriverClassName   : $('[name="destination-db-driver-class-name"]'),
+        dbUrl               : $('[name="destination-db-url"]'),
+        dbUsername          : $('[name="destination-db-username"]'),
+        dbPassword          : $('[name="destination-db-password"]'),
+        btnConnectionTest   : $('#btn-destination-connection-test'),
     }
 
-    let getDestinationDb = ()=> {
-        let db = new DatabaseSetting();
-        db.type = $destinationDbType.val();
-        db.driverClassName = $destinationDbDriverClassName.val();
-        db.url = $destinationDbUrl.val();
-        db.username = $destinationDbUsername.val();
-        db.password = $destinationDbPassword.val();
-
-        return db;
+    //tables set dom
+    const $tablesSet = {
+        status              : $('#status-tables-set'),
+        table               : $('#table-list'),
+        thead               : $('#table-list > thead'),
+        tbody               : $('#table-list > tbody'),
+        chkTables           : $('#chk-tables'),
+        tablesSelectedText  : $('.tables-selected-text'),
+        submit              : $('#btnSubmit'),
     }
 
-    $sourceDbType.change(function() {
-        let type = $(this).val();
-        let defaultSetting = DatabaseType.defaultSetting[type];
+    //tools for dbt
+    const DbtUtil = {
+        //get-source-db
+        getSourceDb: () => {
+            let db = new DatabaseSetting();
+            db.type = $sourceSet.dbType.val();
+            db.driverClassName = $sourceSet.dbDriverClassName.val();
+            db.url = $sourceSet.dbUrl.val();
+            db.username = $sourceSet.dbUsername.val();
+            db.password = $sourceSet.dbPassword.val();
+            return db;
+        },
 
-        if (defaultSetting !== undefined) {
-            $(this).parent().find('.driver-class-name-p').text(defaultSetting.driverClassName || '');
-            $sourceDbDriverClassName.val(defaultSetting.driverClassName || '');
-            $sourceDbUrl.val(defaultSetting.url || '');
-            $sourceDbUsername.val(defaultSetting.username || '');
-            $sourceDbPassword.val(defaultSetting.password || '');
-        }
-    });
+        //get-destination-db
+        getDestinationDb: () => {
+            let db = new DatabaseSetting();
+            db.type = $destinationSet.dbType.val();
+            db.driverClassName = $destinationSet.dbDriverClassName.val();
+            db.url = $destinationSet.dbUrl.val();
+            db.username = $destinationSet.dbUsername.val();
+            db.password = $destinationSet.dbPassword.val();
+            return db;
+        },
 
-    $destinationDbType.change(function() {
-        let type = $(this).val();
-        let defaultSetting = DatabaseType.defaultSetting[type];
+        //convert database setting to FormData
+        convertDbSettingToFormData: (dbSetting) => {
+            let formData = new FormData();
+            formData.append('db-driver-class-name', dbSetting.driverClassName);
+            formData.append('db-url', dbSetting.url);
+            formData.append('db-username', dbSetting.username);
+            formData.append('db-password', dbSetting.password);
+            return formData;
+        },
 
-        if (defaultSetting !== undefined) {
-            $(this).parent().find('.driver-class-name-p').text(defaultSetting.driverClassName || '');
-            $destinationDbDriverClassName.val(defaultSetting.driverClassName || '');
-            $destinationDbUrl.val(defaultSetting.url || '');
-            $destinationDbUsername.val(defaultSetting.username || '');
-            $destinationDbPassword.val(defaultSetting.password || '');
-        }
-    });
+        //convert database setting to FormData
+        appendDbSettingsToFormData: function (formData) {
+            let sourceDb = this.getSourceDb();
+            let destinationDb = this.getDestinationDb();
 
-    //connection-test
-    let connectionTest = (formData, option={})=>{
-        gloader.show();
+            formData.append('source-db-driver-class-name', sourceDb.driverClassName);
+            formData.append('source-db-url', sourceDb.url);
+            formData.append('source-db-username', sourceDb.username);
+            formData.append('source-db-password', sourceDb.password);
+            formData.append('destination-db-driver-class-name', destinationDb.driverClassName);
+            formData.append('destination-db-url', destinationDb.url);
+            formData.append('destination-db-username', destinationDb.username);
+            formData.append('destination-db-password', destinationDb.password);
+        },
 
-        return new Promise((resolve, reject)=>{
-            axios.post(`${dbt.contextPath}/connection-test`, formData
-            ).then(res=>{
-                if (option.silent !== true) {
+        //database onnection test
+        connectionTest: function (formData, option = {}) {
+            gloader.show();
+
+            return new Promise((resolve, reject) => {
+                axios.post(`${dbt.contextPath}/connection-test`, formData
+                ).then(res => {
+                    if (option.silent !== true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Connection test success.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                    resolve(res);
+                }).finally(() => {
+                    gloader.hide();
+                }).catch(error => {
+                    console.log(error);
+
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Connection test success.',
+                        icon: 'error',
+                        title: 'Connection test failed.',
+                        text: error.message,
                         showConfirmButton: false,
                         timer: 2000
                     });
-                }
-
-                resolve(res);
-            }).finally(()=>{
-                gloader.hide();
-            }).catch(error => {
-                console.log(error);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Connection test failed.',
-                    text: error.message,
-                    showConfirmButton: false,
-                    timer: 2000
+                    reject(error);
                 });
-
-                reject(error);
             });
-        });
-    };
+        },
 
-    let convertDbSettingToFormData = (dbSetting)=>{
-        let formData = new FormData();
-        formData.append('db-driver-class-name', dbSetting.driverClassName);
-        formData.append('db-url', dbSetting.url);
-        formData.append('db-username', dbSetting.username);
-        formData.append('db-password', dbSetting.password);
+        //tools for tables-set
+        tablesSet : {
+            clearTransferStatusClass : function($tr) {
+                $tr.removeClass('pending running done');
+            },
 
-        return formData;
+            setTransferStatusClass : function($tr, status) {
+                this.clearTransferStatusClass($tr);
+                $tr.addClass(status);
+            },
+
+            setTablesSelectedText : function() {
+                let selected = $tablesSet.tbody.find('.check-table:checked').length;
+                let summary = `${selected} tables selected.`;
+
+                $tablesSet.tablesSelectedText.text(summary);
+
+                this.setTransferStatusClass($tablesSet.tbody.find('.check-table').closest('tr'), 'pending');
+                this.clearTransferStatusClass($tablesSet.tbody.find('.check-table:not(:checked)').closest('tr'));
+
+                $tablesSet.submit.prop('disabled', $tablesSet.tbody.find('.check-table:checked').length == 0);
+            },
+        }
     }
 
-    $btnSourceConnectionTest.click(function() {
-        let sourceDb = getSourceDb();
+    /**
+     * event on change db-type of source
+     */
+    $sourceSet.dbType.change(function() {
+        let type = $(this).val();
+        let defaultSetting = DatabaseType.defaultSetting[type];
 
-        $(this).prepend(`<i class="button-loading fa-solid fa-circle-notch fa-spin"></i>`);
-        $(this).attr('disabled', true);
-
-        let formData = convertDbSettingToFormData(sourceDb);
-
-        connectionTest(formData)
-            .then(res=>{
-                //todo
-            }).finally(()=>{
-                $(this).removeAttr('disabled');
-                $(this).find('.button-loading').remove();
-        });
-    });
-
-    $btnDestinationConnectionTest.click(function() {
-        let destinationDb = getDestinationDb();
-
-        $(this).prepend(`<i class="button-loading fa-solid fa-circle-notch fa-spin"></i>`);
-        $(this).attr('disabled', true);
-
-        let formData = convertDbSettingToFormData(destinationDb);
-
-        connectionTest(formData)
-            .then(res=>{
-                //todo
-            }).finally(()=>{
-                $(this).removeAttr('disabled');
-                $(this).find('.button-loading').remove();
-        });
-    });
-
-    let actionSummary = ()=>{
-        let selected = $('#table-list > tbody .check-table:checked').length;
-        let summary = `${selected} tables selected.`;
-
-        $('.transfer-summary').text(summary);
-        setTransferStatusClass2Tr($('#table-list > tbody .check-table').closest('tr'), 'pending');
-        clearTransferStatusClass2Tr($('#table-list > tbody .check-table:not(:checked)').closest('tr'));
-
-        $('#btnSubmit').attr('disabled', $('#table-list > tbody .check-table:checked').length == 0);
-    };
-
-    $('#chk-tables').change(function() {
-        $('#table-list > tbody .check-table').prop('checked', $(this).is(':checked'));
-
-        actionSummary();
-    });
-
-    $('#table-list > tbody').click(function(e) {
-        let $target = $(e.target);
-
-        if ($target.hasClass('check-table')) {
-            let $notChecked = $('#table-list > tbody .check-table:not(:checked)');
-
-            $('#chk-tables').prop('checked', $notChecked.length == 0);
-            actionSummary();
+        if (defaultSetting !== undefined) {
+            $(this).parent().find('.driver-class-name-p').text(defaultSetting.driverClassName || '');
+            $sourceSet.dbDriverClassName.val(defaultSetting.driverClassName || '');
+            $sourceSet.dbUrl.val(defaultSetting.url || '');
+            $sourceSet.dbUsername.val(defaultSetting.username || '');
+            $sourceSet.dbPassword.val(defaultSetting.password || '');
         }
     });
 
-    let clearTransferStatusClass2Tr = ($tr)=>{
-        $tr.removeClass('pending running done');
-    };
-    let setTransferStatusClass2Tr = ($tr, status)=>{
-        clearTransferStatusClass2Tr($tr);
-        $tr.addClass(status);
-    };
+    /**
+     * event on change db-type of source
+     */
+    $destinationSet.dbType.change(function() {
+        let type = $(this).val();
+        let defaultSetting = DatabaseType.defaultSetting[type];
 
-    $('#btnSubmit').click(function() {
+        if (defaultSetting !== undefined) {
+            $(this).parent().find('.driver-class-name-p').text(defaultSetting.driverClassName || '');
+            $destinationSet.dbDriverClassName.val(defaultSetting.driverClassName || '');
+            $destinationSet.dbUrl.val(defaultSetting.url || '');
+            $destinationSet.dbUsername.val(defaultSetting.username || '');
+            $destinationSet.dbPassword.val(defaultSetting.password || '');
+        }
+    });
 
-        $statusTablesSet.empty();
+    /**
+     * source connection test
+     */
+    $sourceSet.btnConnectionTest.click(function() {
+        let sourceDb = DbtUtil.getSourceDb();
 
-        let $pendings = $('#table-list > tbody > tr.pending');
+        $(this).prepend(`<i class="button-loading fa-solid fa-circle-notch fa-spin"></i>`);
+        $(this).attr('disabled', true);
+
+        let formData = DbtUtil.convertDbSettingToFormData(sourceDb);
+
+        DbtUtil.connectionTest(formData)
+            .then(res=>{
+                //todo
+            }).finally(()=>{
+                $(this).removeAttr('disabled');
+                $(this).find('.button-loading').remove();
+        });
+    });
+
+    /**
+     * destination connection test
+     */
+    $destinationSet.btnConnectionTest.click(function() {
+        let destinationDb = DbtUtil.getDestinationDb();
+
+        $(this).prepend(`<i class="button-loading fa-solid fa-circle-notch fa-spin"></i>`);
+        $(this).attr('disabled', true);
+
+        let formData = DbtUtil.convertDbSettingToFormData(destinationDb);
+
+        DbtUtil.connectionTest(formData)
+            .then(res=>{
+                //todo
+            }).finally(()=>{
+                $(this).removeAttr('disabled');
+                $(this).find('.button-loading').remove();
+        });
+    });
+
+    /**
+     * click checkbox on the thead
+     */
+    $tablesSet.chkTables.change(function() {
+        $tablesSet.tbody.find('.check-table').prop('checked', $(this).is(':checked'));
+        DbtUtil.tablesSet.setTablesSelectedText();
+    });
+
+    /**
+     * click checkbox on the tbody
+     */
+    $tablesSet.tbody.click(function(e) {
+        let $target = $(e.target);
+
+        if ($target.hasClass('check-table')) {
+            let $notChecked = $tablesSet.tbody.find('.check-table:not(:checked)');
+
+            $tablesSet.chkTables.prop('checked', $notChecked.length == 0);
+            DbtUtil.tablesSet.setTablesSelectedText();
+        }
+    });
+
+    /**
+     * submit
+     */
+    $tablesSet.submit.click(function() {
+
+        $tablesSet.status.empty();
+
+        let $pendings = $tablesSet.tbody.children('tr.pending');
 
         //开始传输
         let _transferStart = async ()=> {
             gloader.show();
 
-            $('#chk-tables').prop('disabled', true);
-            $('.check-table').prop('disabled', true);
+            $tablesSet.chkTables.prop('disabled', true);
+            $tablesSet.tbody.find('.check-table').prop('disabled', true);
             $(this).prop('disabled', true);
 
             for (let i = 0; i < $pendings.length; i++) {
                 let $tr = $pendings.eq(i);
 
+                //control scroll
                 $('.table-container')[0].scrollTop = $tr[0].offsetTop - $('.table-container')[0].offsetHeight + 100;
-                setTransferStatusClass2Tr($tr, 'running');
+                DbtUtil.tablesSet.setTransferStatusClass($tr, 'running');
 
-                let sourceDb = getSourceDb();
-                let destinationDb = getDestinationDb();
+                let sourceDb = DbtUtil.getSourceDb();
+                let destinationDb = DbtUtil.getDestinationDb();
                 let tableName = $tr.data('table-name');
 
                 let formData = new FormData();
                 formData.append("tableName", tableName);
-                formData.append('source-db-driver-class-name', sourceDb.driverClassName);
-                formData.append('source-db-url', sourceDb.url);
-                formData.append('source-db-username', sourceDb.username);
-                formData.append('source-db-password', sourceDb.password);
-                formData.append('destination-db-driver-class-name', destinationDb.driverClassName);
-                formData.append('destination-db-url', destinationDb.url);
-                formData.append('destination-db-username', destinationDb.username);
-                formData.append('destination-db-password', destinationDb.password);
+                DbtUtil.appendDbSettingsToFormData(formData);
 
-                $statusTablesSet.text(`${tableName}...${i+1}/${$pendings.length}`);
+                $tablesSet.status.text(`${tableName}...${i+1}/${$pendings.length}`);
 
                 // let res = await axios.post(`${dbt.contextPath}/table-transfer`, formData);
                 // setTransferStatusClass2Tr($tr, 'done');
 
                 await JUnitTestUtil.mockPromise(200);
 
-                setTransferStatusClass2Tr($tr, 'done');
+                DbtUtil.tablesSet.setTransferStatusClass($tr, 'done');
             }
-            $statusTablesSet.text('transfer compelete.');
+            $tablesSet.status.text('transfer compelete.');
 
             gloader.hide();
         }
@@ -262,39 +325,41 @@ $(function () {
             $($(this).data('next-set')).addClass('active');
         };
 
-        if ('source-set' === fieldsetId) {
-            let formData = convertDbSettingToFormData(getSourceDb());
+        if (fieldset.sourceSet === fieldsetId) {
+            let sourceDb = DbtUtil.getSourceDb();
+            let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
 
-            connectionTest(formData, {silent: true})
+            DbtUtil.connectionTest(sourceFormData, {silent: true})
             .then(res=>{
                 wizardNext();
             });
-        } else if ('option-set' === fieldsetId) {
-            let sourceDb = getSourceDb();
-            let destinationDb = getDestinationDb();
-            let formData = convertDbSettingToFormData(destinationDb);
+        } else if (fieldset.optionSet === fieldsetId) {
+            let sourceDb = DbtUtil.getSourceDb();
+            let destinationDb = DbtUtil.getDestinationDb();
+            let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
+            let destinationFormDb = DbtUtil.convertDbSettingToFormData(destinationDb);
 
-            connectionTest(formData, {silent: true})
+            DbtUtil.connectionTest(destinationFormDb, {silent: true})
             .then(res=>{
                 wizardNext();
 
-                $('#chk-tables').prop('disabled', false).prop('checked', false);
-                $('#btnSubmit').prop('disabled', false);
-                $statusTablesSet.empty();
+                $tablesSet.chkTables.prop('disabled', false).prop('checked', false);
+                $tablesSet.submit.prop('disabled', false);
+                $tablesSet.tablesSelectedText.empty();
+                $tablesSet.status.empty();
 
                 gloader.show();
                 let rowNo = 0;
 
-                let $thead = $('#table-list > thead');
-                let $tbody = $('#table-list > tbody').empty();
+                let $thead = $tablesSet.thead;
+                let $tbody = $tablesSet.tbody.empty();
 
                 $thead.find('th.source').text(sourceDb.type);
                 $thead.find('th.destination').text(destinationDb.type);
 
                 //source-tables
-                axios.post(`${dbt.contextPath}/get-tables`, convertDbSettingToFormData(sourceDb)
+                axios.post(`${dbt.contextPath}/get-tables`, sourceFormData
                 ).then(resSource=>{
-
                     resSource.data.forEach(table=>{
                         let $tr = $(`
                             <tr data-table-name="${table.tableName.toLowerCase()}">
@@ -308,12 +373,11 @@ $(function () {
                                 <td class="comment"></td>
                             </tr>
                         `);
-
                         $tbody.append($tr);
                     });
 
                     //destination-tables
-                    axios.post(`${dbt.contextPath}/get-tables`, convertDbSettingToFormData(destinationDb)
+                    axios.post(`${dbt.contextPath}/get-tables`, destinationFormDb
                     ).then(resDestination=> {
                         resDestination.data.forEach(table=>{
                             let $tr = $tbody.children(`tr[data-table-name="${table.tableName.toLowerCase()}"]`);
@@ -332,7 +396,6 @@ $(function () {
                                         <td class="comment"></td>
                                     </tr>
                                 `);
-
                                 $tbody.append($tr);
                             }
                         });
@@ -341,6 +404,13 @@ $(function () {
                 }).finally(()=>{
                     gloader.hide();
                 }).catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error occurred.',
+                        text: error.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 });
             });
         } else {
@@ -351,12 +421,7 @@ $(function () {
     $('.btn.btn-wizard-previous').click(function() {
         $(this).closest('fieldset').removeClass('active');
         $($(this).data('previous-set')).addClass('active');
-
     });
-
-
-
-
 
 
 });

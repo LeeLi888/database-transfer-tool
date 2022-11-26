@@ -338,48 +338,35 @@ $(function () {
             let destinationDb = DbtUtil.getDestinationDb();
             let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
             let destinationFormDb = DbtUtil.convertDbSettingToFormData(destinationDb);
+            let $thead = $tablesSet.thead;
+            let $tbody = $tablesSet.tbody.empty();
 
-            DbtUtil.connectionTest(destinationFormDb, {silent: true})
-            .then(res=>{
-                wizardNext();
-
-                $tablesSet.chkTables.prop('disabled', false).prop('checked', false);
-                $tablesSet.submit.prop('disabled', false);
-                $tablesSet.tablesSelectedText.empty();
-                $tablesSet.status.empty();
-
-                gloader.show();
+            let render = async ()=> {
                 let rowNo = 0;
-
-                let $thead = $tablesSet.thead;
-                let $tbody = $tablesSet.tbody.empty();
-
-                $thead.find('th.source').text(sourceDb.type);
-                $thead.find('th.destination').text(destinationDb.type);
-
                 //source-tables
-                axios.post(`${dbt.contextPath}/get-tables`, sourceFormData
-                ).then(resSource=>{
-                    resSource.data.forEach(table=>{
-                        let $tr = $(`
-                            <tr data-table-name="${table.tableName.toLowerCase()}">
-                                <td class="row-no">${++rowNo}</td>
-                                <td class="check">
-                                    <input class="form-check-input check-table" type="checkbox" value="1">
-                                </td>
-                                <td class="status"><div></div></td>
-                                <td class="meta-table source-table">${table.tableName}</td>
-                                <td class="meta-table destination-table"></td>
-                                <td class="comment"></td>
-                            </tr>
-                        `);
-                        $tbody.append($tr);
+                await axios.post(`${dbt.contextPath}/get-tables`, sourceFormData)
+                    .then(res=> {
+                        res.data.forEach(table => {
+                            let $tr = $(`
+                                <tr data-table-name="${table.tableName.toLowerCase()}">
+                                    <td class="row-no">${++rowNo}</td>
+                                    <td class="check">
+                                        <input class="form-check-input check-table" type="checkbox" value="1">
+                                    </td>
+                                    <td class="status"><div></div></td>
+                                    <td class="meta-table source-table">${table.tableName}</td>
+                                    <td class="meta-table destination-table"></td>
+                                    <td class="comment"></td>
+                                </tr>
+                            `);
+                            $tbody.append($tr);
+                        });
                     });
 
-                    //destination-tables
-                    axios.post(`${dbt.contextPath}/get-tables`, destinationFormDb
-                    ).then(resDestination=> {
-                        resDestination.data.forEach(table=>{
+                //destination-tables
+                await axios.post(`${dbt.contextPath}/get-tables`, destinationFormDb)
+                    .then(res=> {
+                        res.data.forEach(table => {
                             let $tr = $tbody.children(`tr[data-table-name="${table.tableName.toLowerCase()}"]`);
 
                             if ($tr.length > 0) {
@@ -400,10 +387,27 @@ $(function () {
                             }
                         });
                     });
+            };
 
-                }).finally(()=>{
+            DbtUtil.connectionTest(destinationFormDb, {silent: true})
+            .then(res=>{
+                wizardNext();
+
+                $tablesSet.chkTables.prop('disabled', false).prop('checked', false);
+                $tablesSet.submit.prop('disabled', false);
+                $tablesSet.tablesSelectedText.empty();
+                $tablesSet.status.empty();
+
+                gloader.show();
+                let rowNo = 0;
+
+                $thead.find('th.source').text(sourceDb.type);
+                $thead.find('th.destination').text(destinationDb.type);
+
+                try {
+                    render();
                     gloader.hide();
-                }).catch(error => {
+                } catch(error) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error occurred.',
@@ -411,7 +415,7 @@ $(function () {
                         showConfirmButton: false,
                         timer: 2000
                     });
-                });
+                }
             });
         } else {
             wizardNext();

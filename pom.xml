@@ -9,15 +9,28 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lee</groupId>
-    <artifactId>database-transfer-tools</artifactId>
+    <artifactId>database-transfer-tool</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>database-transfer-tools</name>
-    <description>database-transfer-tools</description>
+    <description>database-transfer-tool</description>
     <properties>
         <java.version>11</java.version>
+        <fastjson2.version>2.0.19</fastjson2.version>
+        <hutool.version>5.8.10</hutool.version>
+        <webjars.bootstrap.version>5.2.3</webjars.bootstrap.version>
+        <webjars.jquery.version>3.6.1</webjars.jquery.version>
+        <webjars.moment.version>2.29.4</webjars.moment.version>
+        <webjars.numeral.version>2.0.6</webjars.numeral.version>
+        <webjars.sweetalert2.version>11.6.0</webjars.sweetalert2.version>
+        <webjars.font-awesome.version>6.2.0</webjars.font-awesome.version>
+        <webjars.animate.css.version>4.1.1</webjars.animate.css.version>
+        <webjars.axios.version>1.1.3</webjars.axios.version>
+        <webjars.noty.version>3.1.4</webjars.noty.version>
+        <webjars.sockjs-client.version>1.5.1</webjars.sockjs-client.version>
+        <webjars.stomp-websocket.version>2.3.4</webjars.stomp-websocket.version>
     </properties>
-    <dependencies>
 
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -44,48 +57,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>2.0.19</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.8.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -99,70 +75,116 @@
         </dependency>
 
         <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>${fastjson2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- ###### Database Connection Start ###### -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- ###### Database Connection End ###### -->
+
+        <!-- ###### Webjars Start ###### -->
+        <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>5.2.3</version>
+            <version>${webjars.bootstrap.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>jquery</artifactId>
-            <version>3.6.1</version>
+            <version>${webjars.jquery.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>moment</artifactId>
-            <version>2.29.4</version>
+            <version>${webjars.moment.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>numeral</artifactId>
-            <version>2.0.6</version>
+            <version>${webjars.numeral.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>sweetalert2</artifactId>
-            <version>11.6.0</version>
+            <version>${webjars.sweetalert2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
-            <version>6.2.0</version>
+            <version>${webjars.font-awesome.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>animate.css</artifactId>
-            <version>4.1.1</version>
+            <version>${webjars.animate.css.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>axios</artifactId>
-            <version>1.1.3</version>
+            <version>${webjars.axios.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>noty</artifactId>
-            <version>3.1.4</version>
+            <version>${webjars.noty.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>sockjs-client</artifactId>
-            <version>1.5.1</version>
+            <version>${webjars.sockjs-client.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>stomp-websocket</artifactId>
-            <version>2.3.4</version>
+            <version>${webjars.stomp-websocket.version}</version>
         </dependency>
+        <!-- ###### Webjars End ###### -->
 
     </dependencies>
 

@@ -317,7 +317,7 @@ $(function () {
         }
     });
 
-    $('.btn.btn-wizard-next').click(function() {
+    $('.btn-wizard-next').click(function() {
         let fieldsetId = $(this).closest('fieldset').attr('id');
 
         let wizardNext = ()=>{
@@ -426,7 +426,7 @@ $(function () {
         }
     });
 
-    $('.btn.btn-wizard-previous').click(function() {
+    $('.btn-wizard-previous').click(function() {
         $(this).closest('fieldset').removeClass('active');
         $($(this).data('previous-set')).addClass('active');
     });

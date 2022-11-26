@@ -9,15 +9,13 @@ let DatabaseType = {
     defaultSetting : {
         mysql : {
             driverClassName : 'com.mysql.cj.jdbc.Driver',
-            url: 'jdbc:mysql://localhost:13306/lportal_upgrade?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false&serverTimezone=GMT%2B8&useSSL=false',
+            url: 'jdbc:mysql://localhost:3306/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false&serverTimezone=GMT%2B8&useSSL=false',
             username: 'root',
-            password: 'liferay',
         },
         mssql : {
             driverClassName : 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
-            url: 'jdbc:sqlserver://localhost:1433;database=lportal_upgrade;trustServerCertificate=true;',
+            url: 'jdbc:sqlserver://localhost:1433;database=lportal;trustServerCertificate=true;',
             username: 'sa',
-            password: 'Liferay@2022',
         },
         mariadb : {
             driverClassName : 'org.mariadb.jdbc.Driver',

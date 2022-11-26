@@ -18,3 +18,11 @@
 .loader > .inner > i {
     font-size: 30px;
 }
+
+body {
+    padding: 30px;
+}
+
+.form-control::placeholder {
+    color: #bbb;
+}

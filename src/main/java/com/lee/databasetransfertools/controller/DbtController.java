@@ -31,8 +31,9 @@ public class DbtController {
     @RequestMapping("/get-tables")
     public List<Table> getTables(HttpServletRequest request) throws Exception {
         var db = DbtUtil.getDatabaseSetting(request);
+        var tableNamePattern = (String)null;
 
-        return dbtService.getTables(db);
+        return dbtService.getTables(db, tableNamePattern);
     }
 
     @RequestMapping("/table-transfer")

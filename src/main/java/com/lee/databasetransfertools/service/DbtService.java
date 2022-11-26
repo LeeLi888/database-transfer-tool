@@ -11,7 +11,7 @@ public interface DbtService {
 
     public void connectionTest(DataSourceSetting dbSetting) throws Exception;
 
-    public List<Table> getTables(DataSourceSetting dbSetting) throws Exception;
+    public List<Table> getTables(DataSourceSetting dbSetting, String tableNamePattern) throws Exception;
 
     public Table getTable(DataSourceSetting dbSetting, String tableName) throws Exception;
 

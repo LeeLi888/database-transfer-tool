@@ -16,6 +16,8 @@ public class DbtServiceImpl implements DbtService {
         System.out.println(source.getDriverClassName());
         System.out.println(destination.getDriverClassName());
         System.out.println(tableName);
+
+        //TODO:
     }
 
     @Override
@@ -24,8 +26,8 @@ public class DbtServiceImpl implements DbtService {
     }
 
     @Override
-    public List<Table> getTables(DataSourceSetting dataSource) throws Exception {
-        List<Table> tables = DataSourceMetaDataUtil.getTablesBase(dataSource);
+    public List<Table> getTables(DataSourceSetting dataSource, String tableNamePattern) throws Exception {
+        List<Table> tables = DataSourceMetaDataUtil.getTablesBase(dataSource, tableNamePattern);
 
         return tables;
     }

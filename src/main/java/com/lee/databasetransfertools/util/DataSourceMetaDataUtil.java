@@ -24,13 +24,14 @@ public class DataSourceMetaDataUtil {
     }
 
     //获取表列表（基本信息）
-    public static List<Table> getTablesBase(DataSourceSetting dataSource) throws SQLException, ClassNotFoundException {
+    public static List<Table> getTablesBase(DataSourceSetting dataSource, String tableNamePattern) throws SQLException, ClassNotFoundException {
         List<Table> tables = new ArrayList<>();
+        var schemaPattern = (String)null;
 
         try (var conn = getConnection(dataSource)) {
             var meta = _getMetaData(conn);
 
-            try (var rs = meta.getTables(conn.getCatalog(), null, null, new String[]{ TableType.TABLE.value() })) {
+            try (var rs = meta.getTables(conn.getCatalog(), schemaPattern, tableNamePattern, new String[]{ TableType.TABLE.value() })) {
                 while (rs.next()) {
                     var table = generateTable(rs);
                     tables.add(table);
@@ -42,13 +43,14 @@ public class DataSourceMetaDataUtil {
     }
 
     //获取表列表
-    public static List<Table> getTables(DataSourceSetting dataSource) throws Exception {
+    public static List<Table> getTables(DataSourceSetting dataSource, String tableNamePattern) throws Exception {
         List<Table> tables = new ArrayList<>();
+        var schemaPattern = (String)null;
 
         try (var conn = getConnection(dataSource)) {
             var meta = _getMetaData(conn);
 
-            try (var rs = meta.getTables(conn.getCatalog(), null, null, new String[]{ TableType.TABLE.value() })) {
+            try (var rs = meta.getTables(conn.getCatalog(), schemaPattern, tableNamePattern, new String[]{ TableType.TABLE.value() })) {
                 while (rs.next()) {
                     var table = generateTable(rs);
                     tables.add(table);

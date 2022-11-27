@@ -491,7 +491,6 @@ $(function () {
                                 <tr data-table-name="${table.tableName.toLowerCase()}">
                                     <td class="row-no">${++rowNo}</td>
                                     <td class="check">
-                                        <input class="form-check-input check-table" type="checkbox" value="1">
                                     </td>
                                     <td class="status"><div></div></td>
                                     <td class="meta-table source-table"><a class="table-name" href="#;">${table.tableName}</a></td>
@@ -511,6 +510,7 @@ $(function () {
 
                             if ($tr.length > 0) {
                                 $tr.children('td.destination-table').html(`<a class="table-name" href="#;">${table.tableName}</a>`);
+                                $tr.find('td.check').append(`<input class="form-check-input check-table" type="checkbox" value="1">`);
                             } else {
                                 let $tr = $(`
                                     <tr data-table-name="${table.tableName.toLowerCase()}">

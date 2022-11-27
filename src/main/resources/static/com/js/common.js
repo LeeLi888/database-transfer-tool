@@ -125,7 +125,7 @@ class Modaler {
 
     _init(option) {
         this.$modal = $(`
-            <div class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" ${option.static === true ? "data-bs-backdrop=\"static\"":""} tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog ${option.size||''} modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">

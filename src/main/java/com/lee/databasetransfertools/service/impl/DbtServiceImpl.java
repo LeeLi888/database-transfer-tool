@@ -43,6 +43,8 @@ public class DbtServiceImpl implements DbtService {
                 //insert
                 if (datas.size() > 0) {
                     GeneralSqlUtil.insert(conn, table, datas);
+                    //set latest data into result
+                    result.setLastDatas(datas.subList(Math.max(0, datas.size() - 100), datas.size()));
                 }
 
                 conn.commit();

@@ -26,6 +26,9 @@ body {
 .form-control::placeholder {
     color: #bbb;
 }
+.fs-12px {
+    font-size: 12px !important;
+}
 
 @keyframes fadeInDown {
     from {

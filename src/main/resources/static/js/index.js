@@ -394,18 +394,51 @@ $(function () {
                         if (res.data.size == 0) {
                             $comment.addClass('transfer-no-data').append(`No data transfered.`);
                         } else {
-                            $comment.addClass('transfer-success').append(`
-                                ${numeral(res.data.size).format('0,0')} datas transfered.    
+                            $comment.addClass('transfer-success')
+                                .append(`<a href="#;" class="text-decoration-none">${numeral(res.data.size).format('0,0')} datas transfered.</a>`);
+
+                            let $content  = $(`
+                                <table class="table table-bordered table-sm fs-12px">
+                                    <thead><tr></tr></thead>
+                                    <tbody></tbody>
+                                </table>                                   
                             `);
+                            let $theadTr = $content.find('thead > tr');
+                            let $tbody = $content.find('tbody');
+
+                            var firstData = res.data.lastDatas[0];
+                            var keys = [];
+                            for (var key in firstData) {
+                                $theadTr.append(`<th>${key}</th>`);
+                                keys.push(key);
+                            }
+
+                            res.data.lastDatas.forEach(data=>{
+                                let $tr = $(`<tr></tr>`);
+                                keys.forEach(key=>{
+                                    $tr.append(`<td>${data[key]}</td>`);
+                                });
+                                $tbody.append($tr);
+                            });
+
+                            $comment.find('a').click(function() {
+                                let modal = new Modaler({
+                                    size: 'modal-fullscreen',
+                                    title: `${res.data.lastDatas.length} / ${numeral(res.data.size).format('0,0')}`,
+                                    $content: $content,
+                                });
+                                modal.show();
+                            });
                         }
                         DbtUtil.tablesSet.setTransferStatusClass($tr, 'success')
                     }).catch(error=>{
                         let $comment = $tr.find('.comment').empty();
-                        $comment.addClass('transfer-error').append(`<a href="#;" class="text-decoration-none">${error.response.data.message || error.message}</a>`);
+                        $comment.addClass('transfer-error')
+                            .append(`<a href="#;" class="text-decoration-none">${error.response.data.message || error.message}</a>`);
 
                         $comment.find('a').click(function() {
                             let modal = new Modaler({
-                                size: 'modal-xl',
+                                size: 'modal-fullscreen',
                                 title: error.message,
                                 $content: $(`<pre class="text-danger">${error.response.data.trace}</pre>`),
                             });

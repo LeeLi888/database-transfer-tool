@@ -33,6 +33,14 @@ public class DbtRestController {
         return dbtService.getTables(db, tableNamePattern);
     }
 
+    @RequestMapping("/get-table")
+    public Table getTable(HttpServletRequest request) throws Exception {
+        var db = DbtUtil.getDatabaseSetting(request);
+        var tableName = (String)null;
+
+        return dbtService.getTable(db, tableName);
+    }
+
     @RequestMapping("/table-transfer")
     public TransferResult tableTransfer(HttpServletRequest request) throws Exception {
         var source = DbtUtil.getDatabaseSourceSetting(request);

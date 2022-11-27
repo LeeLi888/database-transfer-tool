@@ -241,11 +241,109 @@ $(function () {
     $tablesSet.tbody.click(function(e) {
         let $target = $(e.target);
 
+        //checkbox click
         if ($target.hasClass('check-table')) {
             let $notChecked = $tablesSet.tbody.find('.check-table:not(:checked)');
 
             $tablesSet.chkTables.prop('checked', $notChecked.length == 0);
             DbtUtil.tablesSet.setTablesSelectedText();
+
+        //table-name click
+        } else if ($target.hasClass('table-name')) {
+            let $tr = $target.closest('tr');
+            let tableName = $target.text();
+            let tableNameSource = $tr.find('td.source-table > .table-name').text();
+            let tableNameDestination = $tr.find('td.destination-table > .table-name').text();
+
+            let renderColumns$Content = async ()=>{
+                let dbSettingSource = DbtUtil.getSourceDb();
+                let dbSettingDestination = DbtUtil.getDestinationDb();
+                let formDataSource = DbtUtil.convertDbSettingToFormData(dbSettingSource);
+                let formDataDestination = DbtUtil.convertDbSettingToFormData(dbSettingDestination);
+
+                formDataSource.append("tableName", tableNameSource);
+                formDataDestination.append("tableName", tableNameDestination);
+
+                let $content = $(`
+                    <div class="modal-table-colums-container">
+                        <table class="table table-columns">
+                            <thead>
+                                <th>Source</th>
+                                <th>Destination</th>
+                                <th>Type</th>
+                                <th>Length</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                `);
+                let $tbody = $content.find('tbody');
+
+                if (tableNameSource !== "") {
+                    await axios.post(`${dbt.contextPath}/get-table`, formDataSource)
+                        .then(res => {
+                            let columns = res.data.columns;
+
+                            console.log(columns);
+
+                            columns.forEach(column => {
+                                $tbody.append(`
+                                    <tr data-column-name="${column.name}">
+                                        <td class="source-column column-name">${column.name}</td>
+                                        <td class="destination-column column-name"></td>
+                                        <td class="column-type" data-column-type="${column.type}" data-column-type-name="${column.typeName}">${column.typeName}</td>
+                                        <td class="column-size" data-column-size="${column.size}">${column.size}</td>
+                                    </tr>
+                                `);
+                            });
+                        });
+                }
+
+                if (tableNameDestination !== "") {
+                    await axios.post(`${dbt.contextPath}/get-table`, formDataDestination)
+                        .then(res => {
+                            let columns = res.data.columns;
+
+                            columns.forEach(column => {
+                                let $tr = $tbody.children(`tr[data-column-name="${column.name}"]`);
+
+                                if ($tr.length > 0) {
+                                    $tr.children('td.destination-column').text(column.name);
+
+                                    if (column.type != $tr.find('.column-type').data('column-type')) {
+                                        $tr.find('.column-type').addClass('column-type-not-match').text($tr.find('.column-type').data('column-type-name') + '/' + column.typeName);
+                                    }
+                                    if (column.size != $tr.find('.column-size').data('column-size')) {
+                                        $tr.find('.column-size').addClass('column-size-not-match').text($tr.find('.column-size').data('column-size') + '/' + column.size);
+                                    }
+                                } else {
+                                    $tbody.append(`
+                                        <tr data-column-name="${column.name}">
+                                            <td class="source-column column-name"></td>
+                                            <td class="destination-column column-name">${column.name}</td>
+                                            <td class="column-type" data-column-type="${column.type}" data-column-type-name="${column.typeName}">${column.typeName}</td>
+                                            <td class="column-size" data-column-size="${column.size}">${column.size}</td>
+                                        </tr>
+                                    `);
+                                }
+                            });
+                        });
+                }
+                return $content;
+            };
+
+            gloader.show();
+            renderColumns$Content()
+                .then(res=> {
+                    let modal = new Modaler({
+                        size: 'modal-lg',
+                        title: tableName,
+                        $content: res,
+                    });
+                    modal.show();
+                }).finally(()=>{
+                    gloader.hide();
+            });
         }
     });
 
@@ -373,7 +471,7 @@ $(function () {
                                         <input class="form-check-input check-table" type="checkbox" value="1">
                                     </td>
                                     <td class="status"><div></div></td>
-                                    <td class="meta-table source-table">${table.tableName}</td>
+                                    <td class="meta-table source-table"><a class="table-name" href="#;">${table.tableName}</a></td>
                                     <td class="meta-table destination-table"></td>
                                     <td class="comment"></td>
                                 </tr>
@@ -389,7 +487,7 @@ $(function () {
                             let $tr = $tbody.children(`tr[data-table-name="${table.tableName.toLowerCase()}"]`);
 
                             if ($tr.length > 0) {
-                                $tr.children('td.destination-table').text(table.tableName);
+                                $tr.children('td.destination-table').html(`<a class="table-name" href="#;">${table.tableName}</a>`);
                             } else {
                                 let $tr = $(`
                                     <tr data-table-name="${table.tableName.toLowerCase()}">
@@ -398,7 +496,7 @@ $(function () {
                                         </td>
                                         <td class="status"><div></div></td>
                                         <td class="meta-table source-table"></td>
-                                        <td class="meta-table destination-table">${table.tableName}</td>
+                                        <td class="meta-table destination-table"><a class="table-name" href="#;">${table.tableName}</a></td>
                                         <td class="comment"></td>
                                     </tr>
                                 `);
@@ -409,7 +507,7 @@ $(function () {
             };
 
             $tablesSet.chkTables.prop('disabled', false).prop('checked', false);
-            $tablesSet.submit.prop('disabled', false);
+            $tablesSet.submit.prop('disabled', true);
             $tablesSet.tablesSelectedText.empty();
             $tablesSet.status.empty();
 

@@ -38,7 +38,7 @@
                 </button>
             </li>
             <li>
-                <button type="button" class="btn btn-primary" id="btnSubmit" disabled>
+                <button type="button" class="btn btn-primary" id="btnSubmit">
                     Submit
                 </button>
             </li>

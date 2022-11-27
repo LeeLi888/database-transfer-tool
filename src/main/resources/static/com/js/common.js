@@ -115,6 +115,78 @@ class Loader {
     }
 };
 
+class Modaler {
+    $modal;
+    _instance;
+
+    constructor(option={}) {
+        this._init(option);
+    }
+
+    _init(option) {
+        this.$modal = $(`
+            <div class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog ${option.size||''} modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${option.title || ''}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        //id
+        if (option.id !== undefined) {
+            this.$modal.prop('id', option.id);
+        }
+
+        //iframe
+        if (option.url !== undefined) {
+            let $iframe = $(`<iframe width="100%" height="100%" style="border: 0;"></iframe>`);
+            this.setContent($iframe);
+            $iframe.attr('src', option.url);
+        } else if (option.$content !== undefined) {
+            this.setContent(option.$content);
+        }
+
+        //footer
+        this.$modal.find('.modal-footer').hide();
+
+        //remove modal
+        this.$modal.one("hidden.bs.modal", (e)=>{
+            this.dispose();
+        });
+
+        $('body').append(this.$modal);
+
+        this._instance = new bootstrap.Modal(this.$modal.get(0), {});
+    }
+
+    setContent($content) {
+        this.$modal.find('.modal-body').empty().append($content);
+    }
+
+    show() {
+        this._instance.show();
+    }
+
+    hide() {
+        this._instance.hide();
+    }
+
+    dispose() {
+        this._instance.dispose();
+        this.$modal.remove();
+    }
+
+}
+
 const gloader = new Loader();
 
 //单体测试模块儿

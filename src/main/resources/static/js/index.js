@@ -390,12 +390,22 @@ $(function () {
                 //await JUnitTestUtil.mockPromise(200);
                 await axios.post(`${dbt.contextPath}/table-transfer`, formData)
                     .then(res=>{
-                        console.log(res);
-                        let $comment = $tr.find('.comment');
+                        let $comment = $tr.find('.comment').empty();
 
+                        if (res.data.size == 0) {
+                            $comment.addClass('opacity-50').append(`No data transfered.`);
+                        } else {
+                            $comment.append(`
+                                ${numeral(res.data.size).format('0,0')} datas transfered.    
+                            `);
+                        }
                         DbtUtil.tablesSet.setTransferStatusClass($tr, 'success')
                     }).catch(error=>{
                         console.error(error);
+
+                        let $comment = $tr.find('.comment').empty();
+                        $comment.append(`${error.response.data.trace}`);
+
                         DbtUtil.tablesSet.setTransferStatusClass($tr, 'error')
                     });
 

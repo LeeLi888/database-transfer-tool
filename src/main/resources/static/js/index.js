@@ -288,7 +288,7 @@ $(function () {
 
                             columns.forEach(column => {
                                 $tbody.append(`
-                                    <tr data-column-name="${column.name}">
+                                    <tr data-column-name="${column.name}" class="column-not-matched">
                                         <td>${++rowNo}</td>
                                         <td class="source-column column-name">${column.name}</td>
                                         <td class="destination-column column-name"></td>
@@ -309,6 +309,7 @@ $(function () {
                                 let $tr = $tbody.children(`tr[data-column-name="${column.name}"]`);
 
                                 if ($tr.length > 0) {
+                                    $tr.removeClass('column-not-matched');
                                     $tr.children('td.destination-column').text(column.name);
 
                                     if (column.type != $tr.find('.column-type').data('column-type')) {
@@ -321,7 +322,7 @@ $(function () {
                                     }
                                 } else {
                                     $tbody.append(`
-                                        <tr data-column-name="${column.name}">
+                                        <tr data-column-name="${column.name}" class="column-not-matched">
                                             <td>${++rowNo}</td>
                                             <td class="source-column column-name"></td>
                                             <td class="destination-column column-name">${column.name}</td>

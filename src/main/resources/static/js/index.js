@@ -438,7 +438,7 @@ $(function () {
 
                         $comment.find('a').click(function() {
                             let modal = new Modaler({
-                                size: 'modal-fullscreen',
+                                size: 'modal-xl',
                                 title: error.message,
                                 $content: $(`<pre class="text-danger">${error.response.data.trace}</pre>`),
                             });

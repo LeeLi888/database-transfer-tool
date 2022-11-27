@@ -61,10 +61,16 @@
             color: #444;
         }
 
-        tr.done > td.status > div:before {
+        tr.success > td.status > div:before {
             content: '\f058';
             font-weight: 900;
             color: #409EFF;
+        }
+
+        tr.error > td.status > div:before {
+            content: '\f06a';
+            font-weight: 900;
+            color: #F56C6C;
         }
 
         .table-container {

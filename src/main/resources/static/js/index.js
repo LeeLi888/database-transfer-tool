@@ -283,10 +283,17 @@ $(function () {
 
                 $tablesSet.status.text(`${tableName}...${i+1}/${$pendings.length}`);
 
-                // let res = await axios.post(`${dbt.contextPath}/table-transfer`, formData);
-                // setTransferStatusClass2Tr($tr, 'done');
+                //await JUnitTestUtil.mockPromise(200);
+                await axios.post(`${dbt.contextPath}/table-transfer`, formData)
+                    .then(res=>{
+                        console.log(res);
+                        let $comment = $tr.find('.comment');
 
-                await JUnitTestUtil.mockPromise(200);
+                        DbtUtil.tablesSet.setTransferStatusClass($tr, 'success')
+                    }).catch(error=>{
+                        console.error(error);
+                        DbtUtil.tablesSet.setTransferStatusClass($tr, 'error')
+                    });
 
                 DbtUtil.tablesSet.setTransferStatusClass($tr, 'done');
             }

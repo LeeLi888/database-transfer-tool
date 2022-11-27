@@ -26,12 +26,13 @@ public class DataSourceMetaDataUtil {
     //获取表列表（基本信息）
     public static List<Table> getTablesBase(DataSourceSetting dataSource, String tableNamePattern) throws SQLException, ClassNotFoundException {
         List<Table> tables = new ArrayList<>();
-        var schemaPattern = (String)null;
 
         try (var conn = getConnection(dataSource)) {
             var meta = _getMetaData(conn);
+            var catalog = conn.getCatalog();
+            var schemaPattern = conn.getSchema();
 
-            try (var rs = meta.getTables(conn.getCatalog(), schemaPattern, tableNamePattern, new String[]{ TableType.TABLE.value() })) {
+            try (var rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{ TableType.TABLE.value() })) {
                 while (rs.next()) {
                     var table = generateTable(rs);
                     tables.add(table);
@@ -45,12 +46,13 @@ public class DataSourceMetaDataUtil {
     //获取表列表
     public static List<Table> getTables(DataSourceSetting dataSource, String tableNamePattern) throws Exception {
         List<Table> tables = new ArrayList<>();
-        var schemaPattern = (String)null;
 
         try (var conn = getConnection(dataSource)) {
             var meta = _getMetaData(conn);
+            var catalog = conn.getCatalog();
+            var schemaPattern = conn.getSchema();
 
-            try (var rs = meta.getTables(conn.getCatalog(), schemaPattern, tableNamePattern, new String[]{ TableType.TABLE.value() })) {
+            try (var rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{ TableType.TABLE.value() })) {
                 while (rs.next()) {
                     var table = generateTable(rs);
                     tables.add(table);
@@ -59,7 +61,7 @@ public class DataSourceMetaDataUtil {
 
             for (var table : tables) {
                 //table detail
-                _setTableDetailInfo(meta, table);
+                _setTableDetailInfo(meta, catalog, schemaPattern, table);
             }
         }
 
@@ -71,17 +73,27 @@ public class DataSourceMetaDataUtil {
         var table = (Table)null;
 
         try (var conn = getConnection(dataSource)) {
-            var meta = _getMetaData(conn);
-
-            try (var rs = meta.getTables(conn.getCatalog(), null, tableName, new String[]{ TableType.TABLE.value() })) {
-                if (rs.next()) {
-                    table = generateTable(rs);
-                }
-            }
-
-            //table detail
-            _setTableDetailInfo(meta, table);
+            table = getTable(conn, tableName);
         }
+        return table;
+    }
+
+    public static Table getTable(Connection conn, String tableName) throws Exception {
+        var table = (Table)null;
+        var catalog = conn.getCatalog();
+        var schemaPattern = conn.getSchema();
+
+        var meta = _getMetaData(conn);
+
+        try (var rs = meta.getTables(catalog, schemaPattern, tableName, new String[]{ TableType.TABLE.value() })) {
+            if (rs.next()) {
+                table = generateTable(rs);
+            }
+        }
+
+        //table detail
+        _setTableDetailInfo(meta, catalog, schemaPattern, table);
+
         return table;
     }
 
@@ -92,8 +104,8 @@ public class DataSourceMetaDataUtil {
 
         return meta;
     }
-    private static void _setTableDetailInfo(DatabaseMetaData meta, Table table) throws Exception {
-        try (var rs = meta.getColumns(null, null, table.getTableName(), null)) {
+    private static void _setTableDetailInfo(DatabaseMetaData meta, String catalog, String schemaPattern, Table table) throws Exception {
+        try (var rs = meta.getColumns(catalog, schemaPattern, table.getTableName(), null)) {
             while (rs.next()) {
                 var column = Column.create(table, rs);
 

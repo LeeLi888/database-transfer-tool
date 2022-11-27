@@ -2,22 +2,52 @@ package com.lee.databasetransfertools.service.impl;
 
 import cn.hutool.db.meta.Table;
 import com.lee.databasetransfertools.data.DataSourceSetting;
+import com.lee.databasetransfertools.data.TransferResult;
 import com.lee.databasetransfertools.service.DbtService;
 import com.lee.databasetransfertools.util.DataSourceMetaDataUtil;
+import com.lee.databasetransfertools.util.GeneralSqlUtil;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class DbtServiceImpl implements DbtService {
 
     @Override
-    public void tableTransfer(DataSourceSetting source, DataSourceSetting destination, String tableName) {
-        System.out.println(source.getDriverClassName());
-        System.out.println(destination.getDriverClassName());
-        System.out.println(tableName);
+    public TransferResult tableTransfer(DataSourceSetting source, DataSourceSetting destination, String tableName) throws Exception {
+        var result = new TransferResult();
 
-        //TODO:
+        try (var connSource = DataSourceMetaDataUtil.getConnection(source);
+             var connDestination = DataSourceMetaDataUtil.getConnection(destination);) {
+
+            try {
+                connDestination.setAutoCommit(false);
+
+                var tableSource = DataSourceMetaDataUtil.getTable(source, tableName);
+                var tableDestination = DataSourceMetaDataUtil.getTable(destination, tableName);
+                var columns = tableSource.getColumns();
+
+                var datas = GeneralSqlUtil.getList(connSource, tableSource);
+                var deleted = GeneralSqlUtil.delete(connDestination, tableDestination);
+
+                result.setTable(tableSource);
+                result.setSize(datas.size());
+                result.setDeletedSizeFromDestination(deleted);
+
+                //insert
+                if (datas.size() > 0) {
+                    GeneralSqlUtil.insert(connDestination, tableDestination, datas);
+                }
+
+                connDestination.commit();
+            } catch (Exception e) {
+                connDestination.rollback();;
+                throw e;
+            }
+        }
+
+        return result;
     }
 
     @Override

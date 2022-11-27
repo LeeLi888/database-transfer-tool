@@ -395,7 +395,7 @@ $(function () {
                         if (res.data.size == 0) {
                             $comment.addClass('opacity-50').append(`No data transfered.`);
                         } else {
-                            $comment.append(`
+                            $comment.addClass('text-primary').append(`
                                 ${numeral(res.data.size).format('0,0')} datas transfered.    
                             `);
                         }

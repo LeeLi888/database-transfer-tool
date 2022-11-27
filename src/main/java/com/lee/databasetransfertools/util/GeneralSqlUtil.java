@@ -97,6 +97,11 @@ public class GeneralSqlUtil {
                         pst.setObject(++indx, null);
                     } else {
                         var column = table.getColumn(key);
+
+                        if (column == null) {
+                            throw new SQLException(String.format("Column [%s] not defined in destination talble.", key));
+                        }
+
                         if (column.getType() == JdbcType.DATE.typeCode) {
                             pst.setDate(++indx, new java.sql.Date(data.getDate(key).getTime()));
                         } else if (column.getType() == JdbcType.TIMESTAMP.typeCode) {

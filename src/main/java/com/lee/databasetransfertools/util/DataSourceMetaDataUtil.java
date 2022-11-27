@@ -92,7 +92,9 @@ public class DataSourceMetaDataUtil {
         }
 
         //table detail
-        _setTableDetailInfo(meta, catalog, schemaPattern, table);
+        if (table != null) {
+            _setTableDetailInfo(meta, catalog, schemaPattern, table);
+        }
 
         return table;
     }

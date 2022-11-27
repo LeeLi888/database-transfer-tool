@@ -401,10 +401,17 @@ $(function () {
                         }
                         DbtUtil.tablesSet.setTransferStatusClass($tr, 'success')
                     }).catch(error=>{
-                        console.error(error);
-
                         let $comment = $tr.find('.comment').empty();
-                        $comment.append(`${error.response.data.trace}`);
+                        $comment.append(`<a href="#;" class="text-danger">${error.message}</a>`);
+
+                        $comment.find('a').click(function() {
+                            let modal = new Modaler({
+                                size: 'modal-xl',
+                                title: error.message,
+                                $content: $(`<pre class="text-danger">${error.response.data.trace}</pre>`),
+                            });
+                            modal.show();
+                        });
 
                         DbtUtil.tablesSet.setTransferStatusClass($tr, 'error')
                     });

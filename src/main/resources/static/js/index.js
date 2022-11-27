@@ -268,6 +268,7 @@ $(function () {
                     <div class="modal-table-colums-container">
                         <table class="table table-columns">
                             <thead>
+                                <th>#</th>
                                 <th>Source</th>
                                 <th>Destination</th>
                                 <th>Type</th>
@@ -279,6 +280,7 @@ $(function () {
                 `);
                 let $tbody = $content.find('tbody');
 
+                let rowNo = 0;
                 if (tableNameSource !== "") {
                     await axios.post(`${dbt.contextPath}/get-table`, formDataSource)
                         .then(res => {
@@ -289,6 +291,7 @@ $(function () {
                             columns.forEach(column => {
                                 $tbody.append(`
                                     <tr data-column-name="${column.name}">
+                                        <td>${++rowNo}</td>
                                         <td class="source-column column-name">${column.name}</td>
                                         <td class="destination-column column-name"></td>
                                         <td class="column-type" data-column-type="${column.type}" data-column-type-name="${column.typeName}">${column.typeName}</td>
@@ -311,14 +314,17 @@ $(function () {
                                     $tr.children('td.destination-column').text(column.name);
 
                                     if (column.type != $tr.find('.column-type').data('column-type')) {
-                                        $tr.find('.column-type').addClass('column-type-not-match').text($tr.find('.column-type').data('column-type-name') + '/' + column.typeName);
+                                        $tr.find('.column-type').addClass('column-type-not-match')
+                                            .text($tr.find('.column-type').data('column-type-name') + '/' + column.typeName);
                                     }
                                     if (column.size != $tr.find('.column-size').data('column-size')) {
-                                        $tr.find('.column-size').addClass('column-size-not-match').text($tr.find('.column-size').data('column-size') + '/' + column.size);
+                                        $tr.find('.column-size').addClass('column-size-not-match')
+                                            .text($tr.find('.column-size').data('column-size') + '/' + column.size);
                                     }
                                 } else {
                                     $tbody.append(`
                                         <tr data-column-name="${column.name}">
+                                            <td>${++rowNo}</td>
                                             <td class="source-column column-name"></td>
                                             <td class="destination-column column-name">${column.name}</td>
                                             <td class="column-type" data-column-type="${column.type}" data-column-type-name="${column.typeName}">${column.typeName}</td>

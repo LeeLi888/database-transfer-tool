@@ -93,15 +93,15 @@ public class GeneralSqlUtil {
             for (var data : datas) {
                 var indx = 0;
                 for (var key : keys) {
+                    var column = table.getColumn(key);
+
+                    if (column == null) {
+                        throw new SQLException(String.format("Column [%s] not defined in destination talble.", key));
+                    }
+
                     if (data.get(key) == null) {
                         pst.setObject(++indx, null);
                     } else {
-                        var column = table.getColumn(key);
-
-                        if (column == null) {
-                            throw new SQLException(String.format("Column [%s] not defined in destination talble.", key));
-                        }
-
                         if (column.getType() == JdbcType.DATE.typeCode) {
                             pst.setDate(++indx, new java.sql.Date(data.getDate(key).getTime()));
                         } else if (column.getType() == JdbcType.TIMESTAMP.typeCode) {

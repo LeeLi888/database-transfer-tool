@@ -36,7 +36,7 @@ public class DbtRestController {
     @RequestMapping("/get-table")
     public Table getTable(HttpServletRequest request) throws Exception {
         var db = DbtUtil.getDatabaseSetting(request);
-        var tableName = (String)null;
+        var tableName = request.getParameter("tableName");
 
         return dbtService.getTable(db, tableName);
     }

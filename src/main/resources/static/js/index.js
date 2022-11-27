@@ -286,8 +286,6 @@ $(function () {
                         .then(res => {
                             let columns = res.data.columns;
 
-                            console.log(columns);
-
                             columns.forEach(column => {
                                 $tbody.append(`
                                     <tr data-column-name="${column.name}">
@@ -393,16 +391,16 @@ $(function () {
                         let $comment = $tr.find('.comment').empty();
 
                         if (res.data.size == 0) {
-                            $comment.addClass('opacity-50').append(`No data transfered.`);
+                            $comment.addClass('transfer-no-data').append(`No data transfered.`);
                         } else {
-                            $comment.addClass('text-primary').append(`
+                            $comment.addClass('transfer-success').append(`
                                 ${numeral(res.data.size).format('0,0')} datas transfered.    
                             `);
                         }
                         DbtUtil.tablesSet.setTransferStatusClass($tr, 'success')
                     }).catch(error=>{
                         let $comment = $tr.find('.comment').empty();
-                        $comment.append(`<a href="#;" class="text-danger">${error.message}</a>`);
+                        $comment.addClass('transfer-error').append(`<a href="#;" class="text-decoration-none">${error.response.data.message || error.message}</a>`);
 
                         $comment.find('a').click(function() {
                             let modal = new Modaler({

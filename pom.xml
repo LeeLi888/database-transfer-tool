@@ -87,6 +87,11 @@
             <version>${hutool.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
         <!-- ###### Database Connection Start ###### -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>

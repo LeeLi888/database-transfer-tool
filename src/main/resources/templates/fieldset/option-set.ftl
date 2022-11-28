@@ -5,8 +5,9 @@
             <label class="float-end">3/4</label>
         </h5>
 
-        <div class="mt-4">
-            <h4>No options available now.</h4>
+        <div class="mt-4 mb-4">
+            <label class="form-label">Table Name Pattern</label>
+            <input type="text" class="form-control w-25" id="txtTableNamePattern" placeholder="Leave empty for match all.">
         </div>
     </div>
 

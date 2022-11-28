@@ -4,7 +4,7 @@ import com.lee.databasetransfertools.data.DataSourceSetting;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class DbtUtil {
+public class DbtRequestUtil {
 
     public static DataSourceSetting getDatabaseSetting(HttpServletRequest reqeust) {
         var ds = new DataSourceSetting();

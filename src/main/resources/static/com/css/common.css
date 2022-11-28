@@ -1,12 +1,12 @@
 .loader {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: none;
     background-color: #ffffff91;
+    z-index: var(--bs-backdrop-zindex);
 }
 .loader > .inner {
     position: relative;

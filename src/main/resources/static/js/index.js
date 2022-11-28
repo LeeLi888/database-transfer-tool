@@ -528,6 +528,12 @@ $(function () {
             };
 
             let render = async()=>{
+                await DbtUtil.connectionTest(destinationFormDb, {silent: true})
+                    .then(res=>{
+                        wizardNext();
+                    });
+
+                gloader.show();
                 $optionSet.ulDsQuickInfo.empty();
                 //source-tables
                 await axios.post(`${dbt.contextPath}/get-database-info`, sourceFormData)
@@ -540,13 +546,10 @@ $(function () {
                     .then(res=> {
                         renderDatasourceInfo(res.data);
                     });
+                gloader.hide();
             };
 
-            DbtUtil.connectionTest(destinationFormDb, {silent: true})
-                .then(res=>{
-                    wizardNext();
-                    render();
-                });
+            render();
 
         } else if (fieldset.optionSet === fieldsetId) {
             wizardNext();

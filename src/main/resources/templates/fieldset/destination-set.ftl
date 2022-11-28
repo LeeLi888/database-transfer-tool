@@ -13,11 +13,12 @@
                 <option value="mariadb">mariadb</option>
                 <option value="postgresql">postgresql</option>
             </select>
-            <p class="driver-class-name-p"></p>
+            <p class="driver-class-name-p text-p-info"></p>
             <input type="hidden" name="destination-db-driver-class-name">
         </div>
         <div class="mb-4">
             <input type="text" class="form-control" name="destination-db-url" placeholder="Connection URL for JDBC Driver">
+            <p class="text-p-info">If run in docker mode, "localhost" should be changed to the host IP or FQDN.</p>
         </div>
         <div class="mb-4">
             <input type="text" class="form-control w-25" name="destination-db-username" placeholder="User Name">

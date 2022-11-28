@@ -24,12 +24,6 @@
             display: inline-block;
             margin-left: 10px;
         }
-        .driver-class-name-p {
-            color: #aaa;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
         .tables-selected-text {
             font-weight: normal;
             margin-left: 10px;
@@ -74,7 +68,7 @@
         }
 
         .table-container {
-            max-height: 800px;
+            max-height: calc(100vh - 450px);
             overflow: auto;
         }
 
@@ -130,6 +124,12 @@
         table.table-columns td.column-type-not-match,
         table.table-columns td.column-size-not-match {
             color: #F56C6C;
+        }
+
+        .text-p-info {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
     </style>

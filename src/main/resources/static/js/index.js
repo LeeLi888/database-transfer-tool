@@ -269,8 +269,8 @@ $(function () {
                         <table class="table table-columns">
                             <thead>
                                 <th>#</th>
-                                <th>Source</th>
-                                <th>Destination</th>
+                                <th>Source(${dbSettingSource.type})</th>
+                                <th>Destination(${dbSettingDestination.type})</th>
                                 <th>Type</th>
                                 <th>Length</th>
                             </thead>
@@ -565,8 +565,8 @@ $(function () {
             $tablesSet.tablesSelectedText.empty();
             $tablesSet.status.empty();
 
-            $thead.find('th.source').text(sourceDb.type);
-            $thead.find('th.destination').text(destinationDb.type);
+            $thead.find('th.source').text(`Source(${sourceDb.type})`);
+            $thead.find('th.destination').text(`Destination(${destinationDb.type})`);
 
             gloader.show();
             render()

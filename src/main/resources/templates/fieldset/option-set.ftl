@@ -38,6 +38,7 @@
         font-size: 30px;
         font-weight: bold;
         color: #666;
+        padding: 20px 0px;
     }
     ul.ds-quick-info .db-name:before {
         font-family: "Font Awesome 6 Free";

@@ -18,7 +18,7 @@
         color: #409EFF;
         position: fixed;
         margin-left: 50px;
-        margin-top: 40px;
+        margin-top: 60px;
     }
     ul.ds-quick-info .card {
         width: 380px;

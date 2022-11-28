@@ -314,11 +314,11 @@ $(function () {
 
                                     if (column.type != $tr.find('.column-type').data('column-type')) {
                                         $tr.find('.column-type').addClass('column-type-not-match')
-                                            .text($tr.find('.column-type').data('column-type-name') + '/' + column.typeName);
+                                            .text($tr.find('.column-type').data('column-type-name') + ' → ' + column.typeName);
                                     }
                                     if (column.size != $tr.find('.column-size').data('column-size')) {
                                         $tr.find('.column-size').addClass('column-size-not-match')
-                                            .text($tr.find('.column-size').data('column-size') + '/' + column.size);
+                                            .text($tr.find('.column-size').data('column-size') + ' → ' + column.size);
                                     }
                                 } else {
                                     $tbody.append(`

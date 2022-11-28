@@ -1,18 +1,16 @@
 package com.lee.databasetransfertools.util;
 
-import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
 import cn.hutool.db.meta.TableType;
 import com.lee.databasetransfertools.data.DataSourceSetting;
+import com.lee.databasetransfertools.data.DatabaseInfo;
 import com.lee.databasetransfertools.data.DbtDataSource;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class DataSourceMetaDataUtil {
 
@@ -22,9 +20,25 @@ public class DataSourceMetaDataUtil {
         return ds.getConnection();
     }
 
+    public static DatabaseInfo getDatabaseInfo(DataSourceSetting dataSource) throws SQLException, ClassNotFoundException {
+        try (var conn = getConnection(dataSource)) {
+            return getDatabaseInfo(conn);
+        }
+    }
+
+    public static DatabaseInfo getDatabaseInfo(Connection conn) throws SQLException {
+        var info = new DatabaseInfo();
+
+        info.setCatalog(conn.getCatalog());
+        info.setProductName(conn.getMetaData().getDatabaseProductName());
+        info.setProductVersion(conn.getMetaData().getDatabaseProductVersion());
+        return info;
+    }
+
     //测试链接
     public static void testConnection(DataSourceSetting dataSource) throws ClassNotFoundException, SQLException {
-        try (var conn = getConnection(dataSource)) {}
+        try (var conn = getConnection(dataSource)) {
+        }
     }
 
     //获取表列表（基本信息）

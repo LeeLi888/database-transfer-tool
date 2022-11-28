@@ -6,6 +6,7 @@ import cn.hutool.db.meta.Table;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.json.JSONObject;
 import com.lee.databasetransfertools.data.DataSourceSetting;
+import com.lee.databasetransfertools.data.DatabaseInfo;
 import com.lee.databasetransfertools.data.DbtDataSource;
 import com.lee.databasetransfertools.data.TransferResult;
 import com.lee.databasetransfertools.service.DbtService;
@@ -93,5 +94,9 @@ public class DbtServiceImpl implements DbtService {
         return table;
     }
 
+    @Override
+    public DatabaseInfo getDatabaseInfo(DataSourceSetting dbSetting) throws Exception {
+        return DataSourceMetaDataUtil.getDatabaseInfo(dbSetting);
+    }
 
 }

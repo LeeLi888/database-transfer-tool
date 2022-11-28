@@ -1,6 +1,7 @@
 package com.lee.databasetransfertools.controller;
 
 import cn.hutool.db.meta.Table;
+import com.lee.databasetransfertools.data.DatabaseInfo;
 import com.lee.databasetransfertools.data.TransferResult;
 import com.lee.databasetransfertools.service.DbtService;
 import com.lee.databasetransfertools.util.DbtRequestUtil;
@@ -38,6 +39,13 @@ public class DbtRestController {
         var tableName = request.getParameter("tableName");
 
         return dbtService.getTable(db, tableName);
+    }
+
+    @RequestMapping("/get-database-info")
+    public DatabaseInfo getDatabaseInfo(HttpServletRequest request) throws Exception {
+        var db = DbtRequestUtil.getDatabaseSetting(request);
+
+        return dbtService.getDatabaseInfo(db);
     }
 
     @RequestMapping("/table-transfer")

@@ -29,6 +29,7 @@ $(function () {
 
     //option set dom
     const $optionSet = {
+        ulDsQuickInfo         : $('.ds-quick-info'),
         tableNamePattern    : $('#txtTableNamePattern'),
     }
 
@@ -503,12 +504,48 @@ $(function () {
                 wizardNext();
             });
         } else if (fieldset.destinationSet === fieldsetId) {
-            let db = DbtUtil.getDestinationDb();
-            let formData = DbtUtil.convertDbSettingToFormData(db);
+            let sourceDb = DbtUtil.getSourceDb();
+            let destinationDb = DbtUtil.getDestinationDb();
+            let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
+            let destinationFormDb = DbtUtil.convertDbSettingToFormData(destinationDb);
 
-            DbtUtil.connectionTest(formData, {silent: true})
+            let renderDatasourceInfo = (ds)=>{
+                $optionSet.ulDsQuickInfo.append(`
+                    <li>
+                        <div class="card">
+                            <div class="card-header">
+                                ${ds.productName}
+                                <p class="version">${ds.productVersion}</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="db-name">
+                                    ${ds.catalog}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `);
+            };
+
+            let render = async()=>{
+                $optionSet.ulDsQuickInfo.empty();
+                //source-tables
+                await axios.post(`${dbt.contextPath}/get-database-info`, sourceFormData)
+                    .then(res=> {
+                        renderDatasourceInfo(res.data);
+                    });
+
+                //destination-tables
+                await axios.post(`${dbt.contextPath}/get-database-info`, destinationFormDb)
+                    .then(res=> {
+                        renderDatasourceInfo(res.data);
+                    });
+            };
+
+            DbtUtil.connectionTest(destinationFormDb, {silent: true})
                 .then(res=>{
                     wizardNext();
+                    render();
                 });
 
         } else if (fieldset.optionSet === fieldsetId) {

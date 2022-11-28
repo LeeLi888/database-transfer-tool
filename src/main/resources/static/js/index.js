@@ -290,7 +290,7 @@ $(function () {
                                 $tbody.append(`
                                     <tr data-column-name="${column.name}" class="column-not-matched">
                                         <td>${++rowNo}</td>
-                                        <td class="source-column column-name">${column.name}</td>
+                                        <td class="source-column column-name ${column.pk === true?'column-pk':''}">${column.name}</td>
                                         <td class="destination-column column-name"></td>
                                         <td class="column-type" data-column-type="${column.type}" data-column-type-name="${column.typeName}">${column.typeName}</td>
                                         <td class="column-size" data-column-size="${column.size}">${column.size}</td>
@@ -312,6 +312,10 @@ $(function () {
                                     $tr.removeClass('column-not-matched');
                                     $tr.children('td.destination-column').text(column.name);
 
+                                    if (column.pk === true) {
+                                        $tr.children('td.destination-column').addClass('column-pk');
+                                    }
+
                                     if (column.type != $tr.find('.column-type').data('column-type')) {
                                         $tr.find('.column-type').addClass('column-type-not-match')
                                             .text($tr.find('.column-type').data('column-type-name') + ' / ' + column.typeName);
@@ -325,7 +329,7 @@ $(function () {
                                         <tr data-column-name="${column.name}" class="column-not-matched">
                                             <td>${++rowNo}</td>
                                             <td class="source-column column-name"></td>
-                                            <td class="destination-column column-name">${column.name}</td>
+                                            <td class="destination-column column-name ${column.pk === true?'column-pk':''}">${column.name}</td>
                                             <td class="column-type" data-column-type="${column.type}" data-column-type-name="${column.typeName}">${column.typeName}</td>
                                             <td class="column-size" data-column-size="${column.size}">${column.size}</td>
                                         </tr>

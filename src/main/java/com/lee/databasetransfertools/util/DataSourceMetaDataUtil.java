@@ -107,13 +107,19 @@ public class DataSourceMetaDataUtil {
         return meta;
     }
     private static void _setTableDetailInfo(DatabaseMetaData meta, String catalog, String schemaPattern, Table table) throws Exception {
+        //pkey
+        try (var rs = meta.getPrimaryKeys(catalog, schemaPattern, table.getTableName())) {
+            if (null != rs) {
+                while (rs.next()) {
+                    table.addPk(rs.getString("COLUMN_NAME"));
+                }
+            }
+        }
+
+        //columns
         try (var rs = meta.getColumns(catalog, schemaPattern, table.getTableName(), null)) {
             while (rs.next()) {
                 var column = Column.create(table, rs);
-
-                if (column.isPk()) {
-                    table.addPk(column.getName());
-                }
                 table.setColumn(column);
             }
         }

@@ -505,7 +505,6 @@ $(function () {
         } else if (fieldset.optionSet === fieldsetId) {
             wizardNext();
 
-            gloader.show();
             let sourceDb = DbtUtil.getSourceDb();
             let destinationDb = DbtUtil.getDestinationDb();
             let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
@@ -569,18 +568,22 @@ $(function () {
             $thead.find('th.source').text(sourceDb.type);
             $thead.find('th.destination').text(destinationDb.type);
 
-            try {
-                render();
-                gloader.hide();
-            } catch(error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error occurred.',
-                    text: error.message,
-                    showConfirmButton: false,
-                    timer: 2000
+            gloader.show();
+            render()
+                .then(res=>{
+                    //Nothing to do
+                }).finally(()=>{
+                    gloader.hide();
+                }).catch(error=>{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error occurred.',
+                        text: error.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 });
-            }
+
         } else {
             wizardNext();
         }

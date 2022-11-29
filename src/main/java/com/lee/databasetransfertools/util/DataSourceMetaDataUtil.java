@@ -25,10 +25,20 @@ public class DataSourceMetaDataUtil {
         return ds.getConnection();
     }
 
-    public static DatabaseInfo getDatabaseInfo(DataSourceSetting dataSource) throws SQLException, ClassNotFoundException {
+    public static DatabaseInfo getDatabaseInfo(DataSourceSetting dataSource) throws Exception {
+        var info = new DatabaseInfo();
+
+        var tables = getTables(dataSource, null);
+        info.setTables(tables);
+
         try (var conn = getConnection(dataSource)) {
-            return getDatabaseInfo(conn);
+            info.setCatalog(MetaUtil.getCatalog(conn));
+            info.setProductName(DatabaseProductNameUtil.getProductName(conn.getMetaData()));
+            info.setProductVersion(conn.getMetaData().getDatabaseProductVersion());
+            info.setLength(getDatabaseLength(conn));
         }
+
+        return info;
     }
 
     public static long getDatabaseLength(Connection conn) throws SQLException {
@@ -54,16 +64,6 @@ public class DataSourceMetaDataUtil {
         }
 
         return size;
-    }
-
-    public static DatabaseInfo getDatabaseInfo(Connection conn) throws SQLException {
-        var info = new DatabaseInfo();
-
-        info.setCatalog(conn.getCatalog());
-        info.setProductName(DatabaseProductNameUtil.getProductName(conn.getMetaData()));
-        info.setProductVersion(conn.getMetaData().getDatabaseProductVersion());
-        info.setLength(getDatabaseLength(conn));
-        return info;
     }
 
     //测试链接

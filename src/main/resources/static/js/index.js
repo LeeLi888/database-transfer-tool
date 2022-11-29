@@ -1,5 +1,24 @@
 $(function () {
 
+    const DatabaseInfo = {
+        source : {},
+        destination: {},
+
+        isSameDatabase : function() {
+            for (var key in this.source) {
+                //如果是数组，只要判断数组长度就可以，里面的内容不做判断
+                if (Array.isArray(this.source[key])){
+                    if (this.source[key].length != this.destination[key].length) {
+                        return false;
+                    }
+                } else if (this.source[key] !== this.destination[key]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    };
+
     const fieldset = {
         sourceSet : 'source-set',
         destinationSet : 'destination-set',
@@ -517,7 +536,9 @@ $(function () {
                 $li.find('.db-length').removeClass('w-100 placeholder');
 
                 if ($li.index() == 0 && ds.length && ds.length >= 0) {
-                    $li.find('.db-length').text(`${numeral(ds.length).format('0,0')} Entries`);
+                    $li.find('.db-length').text(`${numeral(ds.length).format('0,0')} Entries / ${numeral(ds.tables.length).format('0,0')} Tables`);
+                } else {
+                    $li.find('.db-length').text(`${numeral(ds.tables.length).format('0,0')} Tables`);
                 }
             };
 
@@ -558,31 +579,26 @@ $(function () {
                 $optionSet.ulDsQuickInfo.closest('fieldset').find('.alert').remove();
 
                 //source-tables
-                let sourceDatabaseInfo = {};
                 await axios.post(`${dbt.contextPath}/get-database-info`, sourceFormData)
                     .then(res=> {
-                        sourceDatabaseInfo = res.data;
-                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(1)'), sourceDatabaseInfo);
+                        DatabaseInfo.source = res.data;
+                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(1)'), DatabaseInfo.source);
                     });
 
                 //destination-tables
                 let destinationDatabaseInfo = {};
                 await axios.post(`${dbt.contextPath}/get-database-info`, destinationFormDb)
                     .then(res=> {
-                        destinationDatabaseInfo = res.data;
-                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(2)'), destinationDatabaseInfo);
+                        DatabaseInfo.destination = res.data;
+                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(2)'), DatabaseInfo.destination);
                     });
 
                 //判断两边是否为同一个数据库
-                if (sourceDatabaseInfo.productName === destinationDatabaseInfo.productName &&
-                    sourceDatabaseInfo.productVersion === destinationDatabaseInfo.productVersion &&
-                    sourceDatabaseInfo.catalog === destinationDatabaseInfo.catalog &&
-                    sourceDatabaseInfo.length == destinationDatabaseInfo.length) {
-
+                if (DatabaseInfo.isSameDatabase()) {
                     $optionSet.ulDsQuickInfo.before(`
                         <div class="mb-4 alert alert-warning animate__animated animate__fadeIn" role="alert">
                             <i class="fa-solid fa-triangle-exclamation"></i>
-                           It seems the same DB on both sides
+                            It seems the same DataBase on both sides.
                         </div>
                     `);
                 }

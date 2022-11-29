@@ -555,17 +555,38 @@ $(function () {
                 gloader.show();
                 renderPlaceholder();
 
+                $optionSet.ulDsQuickInfo.closest('fieldset').find('.alert').remove();
+
                 //source-tables
+                let sourceDatabaseInfo = {};
                 await axios.post(`${dbt.contextPath}/get-database-info`, sourceFormData)
                     .then(res=> {
-                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(1)'), res.data);
+                        sourceDatabaseInfo = res.data;
+                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(1)'), sourceDatabaseInfo);
                     });
 
                 //destination-tables
+                let destinationDatabaseInfo = {};
                 await axios.post(`${dbt.contextPath}/get-database-info`, destinationFormDb)
                     .then(res=> {
-                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(2)'), res.data);
+                        destinationDatabaseInfo = res.data;
+                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(2)'), destinationDatabaseInfo);
                     });
+
+                //判断两边是否为同一个数据库
+                if (sourceDatabaseInfo.productName === destinationDatabaseInfo.productName &&
+                    sourceDatabaseInfo.productVersion === destinationDatabaseInfo.productVersion &&
+                    sourceDatabaseInfo.catalog === destinationDatabaseInfo.catalog &&
+                    sourceDatabaseInfo.length == destinationDatabaseInfo.length) {
+
+                    $optionSet.ulDsQuickInfo.before(`
+                        <div class="mb-4 alert alert-warning animate__animated animate__fadeIn" role="alert">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                           It seems the same DB on both sides
+                        </div>
+                    `);
+                }
+
                 gloader.hide();
             };
 

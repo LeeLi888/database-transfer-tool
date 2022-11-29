@@ -11,7 +11,7 @@
                 <option value="" disabled selected>Please select Database Type</option>
                 <option value="mysql">MySQL</option>
                 <option value="mssql">Microsoft SQL Server</option>
-                <option value="mariadb">Mariadb</option>
+                <option value="mariadb">MariaDB</option>
                 <option value="postgresql">PostgreSQL</option>
             </select>
             <p class="driver-class-name-p text-p-info"></p>

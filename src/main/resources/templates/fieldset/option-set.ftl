@@ -17,9 +17,9 @@
         font-weight: 900;
         font-size: 60px;
         color: #409EFF;
-        position: fixed;
+        position: absolute;
         margin-left: 50px;
-        margin-top: 60px;
+        margin-top: 70px;
     }
     ul.ds-quick-info .card {
         width: 380px;

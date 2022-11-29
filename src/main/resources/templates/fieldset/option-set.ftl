@@ -44,7 +44,7 @@
         font-family: "Font Awesome 6 Free";
         content: "\f1c0";
         font-weight: 900;
-        margin-right: 5px;
+        margin-right: 10px;
     }
 </style>
 

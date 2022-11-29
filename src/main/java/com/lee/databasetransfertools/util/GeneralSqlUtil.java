@@ -58,7 +58,7 @@ public class GeneralSqlUtil {
                 StatementUtil.fillParams(pst, params);
                 pst.addBatch();
             }
-            pst.executeUpdate();
+            pst.executeBatch();
         }
     }
 

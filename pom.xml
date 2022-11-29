@@ -29,6 +29,7 @@
         <webjars.noty.version>3.1.4</webjars.noty.version>
         <webjars.sockjs-client.version>1.5.1</webjars.sockjs-client.version>
         <webjars.stomp-websocket.version>2.3.4</webjars.stomp-websocket.version>
+        <webjar.bootstrap-select.version>1.14.0-beta3</webjar.bootstrap-select.version>
     </properties>
 
     <dependencies>
@@ -195,6 +196,12 @@
             <groupId>org.webjars</groupId>
             <artifactId>stomp-websocket</artifactId>
             <version>${webjars.stomp-websocket.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>bootstrap-select</artifactId>
+            <version>${webjar.bootstrap-select.version}</version>
         </dependency>
         <!-- ###### Webjars End ###### -->
 

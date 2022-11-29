@@ -29,7 +29,14 @@ body {
 .fs-12px {
     font-size: 12px !important;
 }
-
+.bootstrap-select .dropdown-toggle:focus {
+    outline: 0 !important;
+    outline-offset: unset !important;
+    border-color: #f9fafb;
+}
+.bootstrap-select .dropdown-menu {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
 @keyframes fadeInDown {
     from {
         transform: translate3d(0, -50px, 0);

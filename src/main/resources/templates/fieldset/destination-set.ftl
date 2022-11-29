@@ -6,7 +6,7 @@
         </h5>
 
         <div class="mt-4 mb-4">
-            <select class="form-select w-25" name="destination-db-type">
+            <select class="selectpicker w-25" name="destination-db-type">
                 <option value="" disabled selected>Please select Database Type</option>
                 <option value="mysql">MySQL</option>
                 <option value="mssql">Microsoft SQL Server</option>

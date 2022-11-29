@@ -10,6 +10,7 @@
 <script src="${_contextPath_}/webjars/noty/3.1.4/lib/noty.min.js"></script>
 <script src="${_contextPath_}/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script src="${_contextPath_}/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
+<script src="${_contextPath_}/webjars/bootstrap-select/1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 
 <script src="${_contextPath_}/com/js/common.js"></script>
 

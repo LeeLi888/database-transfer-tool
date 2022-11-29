@@ -6,5 +6,6 @@
 <link rel="stylesheet" href="${_contextPath_}/webjars/font-awesome/6.2.0/css/all.min.css" />
 <link rel="stylesheet" href="${_contextPath_}/webjars/animate.css/4.1.1/animate.min.css" />
 <link rel="stylesheet" href="${_contextPath_}/webjars/noty/3.1.4/lib/noty.css" />
+<link rel="stylesheet" href="${_contextPath_}/webjars/bootstrap-select/1.14.0-beta3/dist/css/bootstrap-select.min.css" />
 
 <link rel="stylesheet" href="${_contextPath_}/com/css/common.css" />

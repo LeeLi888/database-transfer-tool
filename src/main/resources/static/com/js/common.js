@@ -25,7 +25,7 @@ let DatabaseType = {
         postgresql : {
             driverClassName : 'org.postgresql.Driver',
             url: 'jdbc:postgresql://localhost:5432/lportal',
-            username: 'root',
+            username: 'postgres',
         }
     }
 };

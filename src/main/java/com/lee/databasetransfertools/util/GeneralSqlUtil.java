@@ -2,7 +2,9 @@ package com.lee.databasetransfertools.util;
 
 import cn.hutool.db.Entity;
 import cn.hutool.db.StatementUtil;
+import cn.hutool.db.handler.EntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
+import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.meta.Table;
 import cn.hutool.db.sql.SqlExecutor;
 import com.lee.databasetransfertools.data.DataSourceSetting;
@@ -23,6 +25,11 @@ public class GeneralSqlUtil {
      */
     public static int delete(Connection conn, String tableName) throws SQLException {
         int count = SqlExecutor.execute(conn, "DELETE FROM " + tableName);
+        return count;
+    }
+
+    public static int length(Connection conn, String tableName) throws SQLException {
+        int count = SqlExecutor.query(conn, "SELECT COUNT(*) FROM " + tableName, new NumberHandler()).intValue();
         return count;
     }
 

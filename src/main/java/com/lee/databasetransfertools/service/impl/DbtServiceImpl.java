@@ -5,10 +5,7 @@ import cn.hutool.db.ds.simple.SimpleDataSource;
 import cn.hutool.db.meta.Table;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.json.JSONObject;
-import com.lee.databasetransfertools.data.DataSourceSetting;
-import com.lee.databasetransfertools.data.DatabaseInfo;
-import com.lee.databasetransfertools.data.DbtDataSource;
-import com.lee.databasetransfertools.data.TransferResult;
+import com.lee.databasetransfertools.data.*;
 import com.lee.databasetransfertools.service.DbtService;
 import com.lee.databasetransfertools.util.DataSourceMetaDataUtil;
 import com.lee.databasetransfertools.util.GeneralSqlUtil;
@@ -81,10 +78,24 @@ public class DbtServiceImpl implements DbtService {
     }
 
     @Override
-    public List<String> getTables(DataSourceSetting dataSource, String tableNamePattern) throws Exception {
-        var tables = DataSourceMetaDataUtil.getTables(dataSource, tableNamePattern);
+    public List<TableInfo> getTables(DataSourceSetting dataSource, String tableNamePattern, boolean withTableLength) throws Exception {
+        List<TableInfo> list = new ArrayList<>();
+        var tableNames = DataSourceMetaDataUtil.getTables(dataSource, tableNamePattern);
 
-        return tables;
+        try (var conn = DataSourceMetaDataUtil.getConnection(dataSource)) {
+            for (String tableName : tableNames) {
+                var table = new TableInfo();
+                table.setTableName(tableName);
+
+                if (withTableLength) {
+                    table.setLength(GeneralSqlUtil.length(conn, tableName));
+                }
+
+                list.add(table);
+            }
+        }
+
+        return list;
     }
 
     @Override

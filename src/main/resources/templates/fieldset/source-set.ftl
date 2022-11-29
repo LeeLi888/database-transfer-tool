@@ -9,10 +9,10 @@
         <div class="mt-4 mb-4">
             <select class="form-select w-25" name="source-db-type">
                 <option value="" disabled selected>Please select Database Type</option>
-                <option value="mysql">MySql</option>
+                <option value="mysql">MySQL</option>
                 <option value="mssql">Microsoft SQL Server</option>
-                <option value="mariadb">mariadb</option>
-                <option value="postgresql">postgresql</option>
+                <option value="mariadb">Mariadb</option>
+                <option value="postgresql">PostgreSQL</option>
             </select>
             <p class="driver-class-name-p text-p-info"></p>
             <input type="hidden" name="source-db-driver-class-name">

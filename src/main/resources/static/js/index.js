@@ -582,6 +582,7 @@ $(function () {
             let $tbody = $tablesSet.tbody.empty();
 
             sourceFormData.append("tableNamePattern", $optionSet.tableNamePattern.val());
+            sourceFormData.append("withTableLength", true);
             destinationFormDb.append("tableNamePattern", $optionSet.tableNamePattern.val());
 
             let render = async ()=> {
@@ -591,11 +592,12 @@ $(function () {
                     .then(res=> {
                         res.data.forEach(table => {
                             let $tr = $(`
-                                <tr data-table-name="${table.toLowerCase()}">
+                                <tr data-table-name="${table.tableName.toLowerCase()}">
                                     <td class="row-no">${++rowNo}</td>
                                     <td class="check"></td>
                                     <td class="status"><div></div></td>
-                                    <td class="meta-table source-table"><a class="table-name" href="#;">${table}</a></td>
+                                    <td class="table-length ${table.length==0?'table-empty':''}">${table.length>0?numeral(table.length).format('0,0'):'Empty'}</td>
+                                    <td class="meta-table source-table"><a class="table-name" href="#;">${table.tableName}</a></td>
                                     <td class="meta-table destination-table"></td>
                                     <td class="comment"></td>
                                 </tr>
@@ -608,19 +610,20 @@ $(function () {
                 await axios.post(`${dbt.contextPath}/get-tables`, destinationFormDb)
                     .then(res=> {
                         res.data.forEach(table => {
-                            let $tr = $tbody.children(`tr[data-table-name="${table.toLowerCase()}"]`);
+                            let $tr = $tbody.children(`tr[data-table-name="${table.tableName.toLowerCase()}"]`);
 
                             if ($tr.length > 0) {
-                                $tr.children('td.destination-table').html(`<a class="table-name" href="#;">${table}</a>`);
+                                $tr.children('td.destination-table').html(`<a class="table-name" href="#;">${table.tableName}</a>`);
                                 $tr.find('td.check').append(`<input class="form-check-input check-table" type="checkbox" value="1">`);
                             } else {
                                 let $tr = $(`
-                                    <tr data-table-name="${table.toLowerCase()}">
+                                    <tr data-table-name="${table.tableName.toLowerCase()}">
                                         <td class="row-no">${++rowNo}</td>
                                         <td class="check"></td>
                                         <td class="status"><div></div></td>
+                                        <td class="table-length"></td>
                                         <td class="meta-table source-table"></td>
-                                        <td class="meta-table destination-table"><a class="table-name" href="#;">${table}</a></td>
+                                        <td class="meta-table destination-table"><a class="table-name" href="#;">${table.tableName}</a></td>
                                         <td class="comment"></td>
                                     </tr>
                                 `);

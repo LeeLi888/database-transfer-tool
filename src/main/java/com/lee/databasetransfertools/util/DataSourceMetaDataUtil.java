@@ -37,18 +37,17 @@ public class DataSourceMetaDataUtil {
         var databaseName = conn.getCatalog();
 
         try {
-            if (DatabaseProductNameUtil.isMySQL(meta)) {
+            if (DatabaseProductNameUtil.isMySQL(meta) || DatabaseProductNameUtil.isMariaDB(meta)) {
                 size = SqlExecutor.query(conn,
-                        "SELECT SUM(table_rows) FROM INFORMATION_SCHEMA.tables where TABLE_SCHEMA=?", new NumberHandler(), databaseName).longValue();
+                   "SELECT SUM(table_rows) FROM INFORMATION_SCHEMA.tables where TABLE_SCHEMA=?", new NumberHandler(), databaseName).longValue();
 
             } else if (DatabaseProductNameUtil.isMicrosoftSQLServer(meta)) {
                 size = SqlExecutor.query(conn,
                     "SELECT SUM(B.rows) FROM sys.objects A INNER JOIN sys.partitions B ON A.object_id = B.object_id WHERE A.type = 'U'", new NumberHandler()).longValue();
 
-            } else if (DatabaseProductNameUtil.isMariaDB(meta)) {
-
             } else if (DatabaseProductNameUtil.isPostgreSQL(meta)) {
-
+                size = SqlExecutor.query(conn,
+                        "select sum(n_live_tup) from pg_stat_user_tables where schemaname='public'", new NumberHandler()).longValue();
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

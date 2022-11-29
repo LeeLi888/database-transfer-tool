@@ -3,6 +3,7 @@ package com.lee.databasetransfertools.service;
 import cn.hutool.db.meta.Table;
 import com.lee.databasetransfertools.data.DataSourceSetting;
 import com.lee.databasetransfertools.data.DatabaseInfo;
+import com.lee.databasetransfertools.data.TableInfo;
 import com.lee.databasetransfertools.data.TransferResult;
 
 import java.sql.SQLException;
@@ -14,7 +15,7 @@ public interface DbtService {
 
     public void connectionTest(DataSourceSetting dbSetting) throws Exception;
 
-    public List<String> getTables(DataSourceSetting dbSetting, String tableNamePattern) throws Exception;
+    public List<TableInfo> getTables(DataSourceSetting dbSetting, String tableNamePattern, boolean withTableLength) throws Exception;
 
     public Table getTable(DataSourceSetting dbSetting, String tableName) throws Exception;
 

@@ -14,6 +14,7 @@
                     <input class="form-check-input" type="checkbox" value="1" id="chk-tables">
                 </th>
                 <th></th>
+                <th></th>
                 <th class="source"></th>
                 <th class="destination"></th>
                 <th class="comment"></th>

@@ -509,22 +509,33 @@ $(function () {
             let sourceFormData = DbtUtil.convertDbSettingToFormData(sourceDb);
             let destinationFormDb = DbtUtil.convertDbSettingToFormData(destinationDb);
 
-            let renderDatasourceInfo = (ds)=>{
-                $optionSet.ulDsQuickInfo.append(`
-                    <li>
-                        <div class="card">
-                            <div class="card-header">
-                                ${ds.productName}
-                                <p class="version">${ds.productVersion}</p>
-                            </div>
-                            <div class="card-body">
-                                <div class="db-name">
-                                    ${ds.catalog}
+            let renderDatasourceInfo = ($li, ds)=>{
+                $li.find('.card-header').removeClass('w-100 placeholder');
+                $li.find('.card-header > span').text(ds.productName);
+                $li.find('.card-header > .version').text(ds.productVersion);
+                $li.find('.db-name').removeClass('w-100 placeholder').text(ds.catalog);
+            };
+
+            let renderPlaceholder = ()=> {
+                $optionSet.ulDsQuickInfo.empty();
+
+                for (var i=0; i<2; i++ ) {
+                    $optionSet.ulDsQuickInfo.append(`
+                        <li>
+                            <div class="card">
+                                <div class="card-header w-100 placeholder">
+                                    <span>&nbsp;</span>
+                                    <p class="version">&nbsp;</p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="db-name placeholder w-100">
+                                        &nbsp;
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                `);
+                        </li>
+                    `);
+                }
             };
 
             let render = async()=>{
@@ -534,17 +545,18 @@ $(function () {
                     });
 
                 gloader.show();
-                $optionSet.ulDsQuickInfo.empty();
+                renderPlaceholder();
+
                 //source-tables
                 await axios.post(`${dbt.contextPath}/get-database-info`, sourceFormData)
                     .then(res=> {
-                        renderDatasourceInfo(res.data);
+                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(1)'), res.data);
                     });
 
                 //destination-tables
                 await axios.post(`${dbt.contextPath}/get-database-info`, destinationFormDb)
                     .then(res=> {
-                        renderDatasourceInfo(res.data);
+                        renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(2)'), res.data);
                     });
                 gloader.hide();
             };

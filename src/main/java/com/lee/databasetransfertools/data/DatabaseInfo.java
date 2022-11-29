@@ -7,4 +7,5 @@ public class DatabaseInfo {
     String productName;
     String productVersion;
     String catalog;
+    long length;
 }

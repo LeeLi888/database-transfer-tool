@@ -6,6 +6,7 @@
     }
     ul.ds-quick-info > li {
         display: inline-block;
+        vertical-align: middle;
     }
     ul.ds-quick-info > li:first-child {
         margin-right: 150px;
@@ -38,7 +39,12 @@
         font-size: 30px;
         font-weight: bold;
         color: #666;
-        padding: 20px 0px;
+        padding: 20px 0px 5px 0px;
+    }
+    ul.ds-quick-info .db-length {
+        color: #aaa;
+        font-size: 16px;
+        padding-bottom: 10px;
     }
     ul.ds-quick-info .db-name:before {
         font-family: "Font Awesome 6 Free";

@@ -514,6 +514,11 @@ $(function () {
                 $li.find('.card-header > span').text(ds.productName);
                 $li.find('.card-header > .version').text(ds.productVersion);
                 $li.find('.db-name').removeClass('w-100 placeholder').text(ds.catalog);
+                $li.find('.db-length').removeClass('w-100 placeholder');
+
+                if ($li.index() == 0 && ds.length && ds.length >= 0) {
+                    $li.find('.db-length').text(`${numeral(ds.length).format('0,0')} Entries`);
+                }
             };
 
             let renderPlaceholder = ()=> {
@@ -529,6 +534,9 @@ $(function () {
                                 </div>
                                 <div class="card-body">
                                     <div class="db-name placeholder w-100">
+                                        &nbsp;
+                                    </div>
+                                    <div class="db-length placeholder w-100">
                                         &nbsp;
                                     </div>
                                 </div>

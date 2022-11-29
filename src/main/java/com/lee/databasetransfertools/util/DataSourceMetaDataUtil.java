@@ -1,18 +1,23 @@
 package com.lee.databasetransfertools.util;
 
+import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
 import cn.hutool.db.meta.TableType;
+import cn.hutool.db.sql.SqlExecutor;
 import com.lee.databasetransfertools.data.DataSourceSetting;
 import com.lee.databasetransfertools.data.DatabaseInfo;
 import com.lee.databasetransfertools.data.DbtDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
 public class DataSourceMetaDataUtil {
+    private static final Logger logger = LogManager.getLogger(GeneralSqlUtil.class);
 
     //获取链接
     public static Connection getConnection(DataSourceSetting dataSource) throws ClassNotFoundException, SQLException {
@@ -26,12 +31,39 @@ public class DataSourceMetaDataUtil {
         }
     }
 
+    public static long getDatabaseLength(Connection conn) throws SQLException {
+        long size = -1;
+        var meta = conn.getMetaData();
+        var databaseName = conn.getCatalog();
+
+        try {
+            if (DatabaseProductNameUtil.isMySQL(meta)) {
+                size = SqlExecutor.query(conn,
+                        "SELECT SUM(table_rows) FROM INFORMATION_SCHEMA.tables where TABLE_SCHEMA=?", new NumberHandler(), databaseName).longValue();
+
+            } else if (DatabaseProductNameUtil.isMicrosoftSQLServer(meta)) {
+                size = SqlExecutor.query(conn,
+                    "SELECT SUM(B.rows) FROM sys.objects A INNER JOIN sys.partitions B ON A.object_id = B.object_id WHERE A.type = 'U'", new NumberHandler()).longValue();
+
+            } else if (DatabaseProductNameUtil.isMariaDB(meta)) {
+
+            } else if (DatabaseProductNameUtil.isPostgreSQL(meta)) {
+
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return size;
+    }
+
     public static DatabaseInfo getDatabaseInfo(Connection conn) throws SQLException {
         var info = new DatabaseInfo();
 
         info.setCatalog(conn.getCatalog());
-        info.setProductName(conn.getMetaData().getDatabaseProductName());
+        info.setProductName(DatabaseProductNameUtil.getProductName(conn.getMetaData()));
         info.setProductVersion(conn.getMetaData().getDatabaseProductVersion());
+        info.setLength(getDatabaseLength(conn));
         return info;
     }
 

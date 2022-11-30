@@ -146,9 +146,7 @@ $(function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Test connection failed.',
-                        text: error.message,
-                        showConfirmButton: false,
-                        timer: 2000
+                        text: dbt.getErrorMessage(error),
                     });
                     reject(error);
                 });
@@ -463,12 +461,12 @@ $(function () {
                     }).catch(error=>{
                         let $comment = $tr.find('.comment').empty();
                         $comment.addClass('transfer-error')
-                            .append(`<a href="#;" class="text-decoration-none">${error.response.data.message || error.message}</a>`);
+                            .append(`<a href="#;" class="text-decoration-none">${dbt.getErrorMessage(error)}</a>`);
 
                         $comment.find('a').click(function() {
                             let modal = new Modaler({
                                 size: 'modal-xl',
-                                title: error.message,
+                                title: dbt.getErrorMessage(error),
                                 $content: $(`<pre class="text-danger">${error.response.data.trace}</pre>`),
                             });
                             modal.show();
@@ -693,9 +691,7 @@ $(function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error occurred.',
-                        text: error.message,
-                        showConfirmButton: false,
-                        timer: 2000
+                        text: dbt.getErrorMessage(error),
                     });
                 });
 

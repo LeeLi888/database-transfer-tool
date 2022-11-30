@@ -1,4 +1,8 @@
-let dbt = {};
+let dbt = {
+    getErrorMessage : error=>{
+        return ((error.response || {}).data || {}).message || error.message;
+    },
+};
 
 let DatabaseType = {
     mysql : 'mysql',

@@ -52,6 +52,10 @@
         font-weight: 900;
         margin-right: 10px;
     }
+    ul.ds-quick-info .db-logo {
+        height: 30px;
+        margin-right: 10px;
+    }
 </style>
 
 <fieldset class="card-set animate__animated animate__fadeIn" id="option-set">

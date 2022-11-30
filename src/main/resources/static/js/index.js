@@ -540,6 +540,8 @@ $(function () {
                 } else {
                     $li.find('.db-length').text(`${numeral(ds.tables.length).format('0,0')} Tables`);
                 }
+
+                $li.find('.card-header > span').prepend(`<img class="db-logo" src="/img/${ds.type}-white2.svg" />`);
             };
 
             let renderPlaceholder = ()=> {
@@ -581,7 +583,8 @@ $(function () {
                 //source-tables
                 await axios.post(`${dbt.contextPath}/get-database-info`, sourceFormData)
                     .then(res=> {
-                        DatabaseInfo.source = res.data;
+                        DatabaseInfo.source = res.data || {};
+                        DatabaseInfo.source.type = sourceDb.type;
                         renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(1)'), DatabaseInfo.source);
                     });
 
@@ -589,7 +592,8 @@ $(function () {
                 let destinationDatabaseInfo = {};
                 await axios.post(`${dbt.contextPath}/get-database-info`, destinationFormDb)
                     .then(res=> {
-                        DatabaseInfo.destination = res.data;
+                        DatabaseInfo.destination = res.data || {};
+                        DatabaseInfo.destination.type = destinationDb.type;
                         renderDatasourceInfo($optionSet.ulDsQuickInfo.children('li:nth-child(2)'), DatabaseInfo.destination);
                     });
 

@@ -132,7 +132,7 @@ $(function () {
                     if (option.silent !== true) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Connection test success.',
+                            title: 'Test connection succeeded.',
                             showConfirmButton: false,
                             timer: 2000
                         });
@@ -145,7 +145,7 @@ $(function () {
 
                     Swal.fire({
                         icon: 'error',
-                        title: 'Connection test failed.',
+                        title: 'Test connection failed.',
                         text: error.message,
                         showConfirmButton: false,
                         timer: 2000
@@ -529,6 +529,7 @@ $(function () {
             let destinationFormDb = DbtUtil.convertDbSettingToFormData(destinationDb);
 
             let renderDatasourceInfo = ($li, ds)=>{
+                $li.find('.card').addClass('shadow-lg');
                 $li.find('.card-header').removeClass('w-100 placeholder');
                 $li.find('.card-header > span').text(ds.productName);
                 $li.find('.card-header > .version').text(ds.productVersion);
@@ -550,7 +551,7 @@ $(function () {
                 for (var i=0; i<2; i++ ) {
                     $optionSet.ulDsQuickInfo.append(`
                         <li>
-                            <div class="card shadow-lg">
+                            <div class="card">
                                 <div class="card-header w-100 placeholder">
                                     <span>&nbsp;</span>
                                     <p class="version">&nbsp;</p>

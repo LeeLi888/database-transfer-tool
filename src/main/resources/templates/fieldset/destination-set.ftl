@@ -33,7 +33,7 @@
         <ul class="actions-footer">
             <li>
                 <button type="button" class="btn btn-success " id="btn-destination-connection-test">
-                    Connection Test
+                    Test Connection
                 </button>
             </li>
             <li>

@@ -424,7 +424,7 @@ $(function () {
                             $comment.addClass('transfer-no-data').append(`No data transfered.`);
                         } else {
                             $comment.addClass('transfer-success')
-                                .append(`<a href="#;" class="text-decoration-none">${numeral(res.data.size).format('0,0')} datas transfered.</a>`);
+                                .append(`<a href="#;" class="text-decoration-none">${numeral(res.data.size).format('0,0')} entries transfered.</a>`);
 
                             let $content  = $(`
                                 <table class="table table-bordered table-sm fs-12px">

@@ -1,4 +1,4 @@
-# Database Transfer Tool
+# How to run
 ## 1. Quickly run in docker mode
 #### Docker run
 ```

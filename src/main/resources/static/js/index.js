@@ -550,7 +550,7 @@ $(function () {
                 for (var i=0; i<2; i++ ) {
                     $optionSet.ulDsQuickInfo.append(`
                         <li>
-                            <div class="card">
+                            <div class="card shadow-lg">
                                 <div class="card-header w-100 placeholder">
                                     <span>&nbsp;</span>
                                     <p class="version">&nbsp;</p>

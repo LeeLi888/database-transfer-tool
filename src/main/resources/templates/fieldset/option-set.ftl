@@ -59,6 +59,10 @@
     ul.ds-quick-info .card {
         transition: all 0.3s ease;
     }
+
+    .alert {
+        display: inline-block;
+    }
 </style>
 
 <fieldset class="card-set animate__animated animate__fadeIn" id="option-set">

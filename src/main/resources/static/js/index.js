@@ -601,7 +601,7 @@ $(function () {
                     $optionSet.ulDsQuickInfo.before(`
                         <div class="mb-4 alert alert-warning animate__animated animate__fadeIn" role="alert">
                             <i class="fa-solid fa-triangle-exclamation"></i>
-                            It seems the same DataBase on both sides.
+                            Both sides seem to be set to the same database.
                         </div>
                     `);
                 }

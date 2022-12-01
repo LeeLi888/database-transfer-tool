@@ -190,7 +190,6 @@ $(function () {
             $sourceSet.dbDriverClassName.val(defaultSetting.driverClassName || '');
             $sourceSet.dbUrl.val(defaultSetting.url || '');
             $sourceSet.dbUsername.val(defaultSetting.username || '');
-            $sourceSet.dbPassword.val(defaultSetting.password || '');
         }
     });
 
@@ -206,7 +205,6 @@ $(function () {
             $destinationSet.dbDriverClassName.val(defaultSetting.driverClassName || '');
             $destinationSet.dbUrl.val(defaultSetting.url || '');
             $destinationSet.dbUsername.val(defaultSetting.username || '');
-            $destinationSet.dbPassword.val(defaultSetting.password || '');
         }
     });
 

@@ -12,6 +12,7 @@
                 <option value="mssql">Microsoft SQL Server</option>
                 <option value="mariadb">MariaDB</option>
                 <option value="postgresql">PostgreSQL</option>
+                <option value="hypersql">HyperSQL</option>
             </select>
             <p class="driver-class-name-p text-p-info"></p>
             <input type="hidden" name="destination-db-driver-class-name">

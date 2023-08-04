@@ -30,6 +30,11 @@ let DatabaseType = {
             driverClassName : 'org.postgresql.Driver',
             url: 'jdbc:postgresql://localhost:5432/lportal',
             username: 'postgres',
+        },
+        hypersql : {
+            driverClassName : 'org.hsqldb.jdbc.JDBCDriver',
+            url: 'jdbc:hsqldb:file:target/HSQLDB',
+            username: 'SA',
         }
     }
 };
